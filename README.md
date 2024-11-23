@@ -56,3 +56,9 @@ erDiagram
 - visualization (BACK-END 35%)
 - geolocalization (BACK-END 15%)
 - search-bar (BACK-END 10%)
+
+## Tasks
+- Sanitize input from api
+- check api data
+- proper display of artist page
+- responsiveness
