@@ -1,0 +1,30 @@
+<!-- templates/artist.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <title>Groupie-tracker</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <a href="/">groupie-tracker</a>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <img class="card-img" src={{.Artist.Image}} alt={{.Artist.Name}} >
+            <p style="font-size: large; color: #fff;">{{.Artist.Name}}</p>
+            <p>Created on: {{.Artist.CreationDate}}</p>
+            <p>First Album: {{.Artist.FirstAlbum}}</p>
+            <p>No. of Performance: {{.Artist.Performances}}</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
+    </footer>
+</body>
+</html>
