@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"sort"
 	"text/template"
 )
 
@@ -21,6 +22,9 @@ var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
 
 func main() {
 	getArtist()
+	sort.Slice(artistsData, func (i, j int) bool {
+		return artistsData[i].Name <= artistsData[j].Name
+	})
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
 
 	http.HandleFunc("/", homeHandler)
