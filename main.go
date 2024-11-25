@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -10,6 +11,7 @@ const apiURL = "https://groupietrackers.herokuapp.com/api/"
 
 type listPage struct {
 	Artists []artistData
+	nbChecked string
 }
 
 type artistPage struct {
@@ -43,12 +45,33 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.Method != "GET" {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return
+	
+	checkErr(req.ParseForm())
+	membersNb, ok := req.Form["members number"]
+	var homePage *listPage
+	if ok {
+		if req.Method != "POST" {
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		filteredArtists := filter(artistsData, membersNb[0], checkMembersNb)
+		homePage = &listPage{
+			Artists: filteredArtists,
+			nbChecked: membersNb[0],
+		}
+	} else {
+		if req.Method != "GET" {
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		homePage = &listPage{
+			Artists: artistsData,
+			nbChecked: "1",
+		}
 	}
+	// fmt.Println("membersNb:", membersNb, "ok:", ok, "\n", artistsData)
+	
 
-	homePage := &listPage{Artists: artistsData}
 
 	indexTmpl.Execute(w, homePage)
 }
