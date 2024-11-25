@@ -1,5 +1,9 @@
 package main
 
+import (
+	"sort"
+)
+
 type artistData struct {
 	Image        string
 	Name         string
@@ -15,6 +19,9 @@ var artistsData []artistData
 
 func getArtist() {
 	grabAPI()
+	sort.Slice(artists, func (i, j int) bool {
+		return artists[i].Name <= artists[j].Name
+	})
 	for i := range artists {
 		artistsData = append(artistsData, artistData{
 			Image:        artists[i].Image,
