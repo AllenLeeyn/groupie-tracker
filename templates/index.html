@@ -16,24 +16,24 @@
 
     <div class="container">
 
-    <!-- <form action="/" method="post">
-        <legend>Members number:</legend>
-        <input type="radio" id="1" name="members number" value="1" {{if eq .nbChecked "1" }}checked="checked" {{end}}>
-        <label for="1">1</label><br>
-        <input type="radio" id="2" name="members number" value="2" {{if eq .nbChecked "2" }}checked="checked" {{end}}>
-        <label for="2">2</label><br>
-        <input type="radio" id="3" name="members number" value="3" {{if eq .nbChecked "3" }}checked="checked" {{end}}>
-        <label for="3">3</label><br>
-        <input type="radio" id="4" name="members number" value="4" {{if eq .nbChecked "4" }}checked="checked" {{end}}>
-        <label for="4">4</label><br>
-        <input type="radio" id="5" name="members number" value="5" {{if eq .nbChecked "5" }}checked="checked" {{end}}>
-        <label for="5">5</label><br>
-        <input type="radio" id="6" name="members number" value="6" {{if eq .nbChecked "6" }}checked="checked" {{end}}>
-        <label for="6">6</label><br>
-        <input type="radio" id="7" name="members number" value="7" {{if eq .nbChecked "7" }}checked="checked" {{end}}>
-        <label for="7">7</label><br>
-        <input type="submit" value="Filter">
-    </form> -->
+        <form action="/" method="post">
+            <legend>Members number:</legend>
+            <input type="radio" id="1" name="members number" value="1" {{if eq .NbChecked "1" }}checked="checked" {{end}}>
+            <label for="1">1</label><br>
+            <input type="radio" id="2" name="members number" value="2" {{if eq .NbChecked "2" }}checked="checked" {{end}}>
+            <label for="2">2</label><br>
+            <input type="radio" id="3" name="members number" value="3" {{if eq .NbChecked "3" }}checked="checked" {{end}}>
+            <label for="3">3</label><br>
+            <input type="radio" id="4" name="members number" value="4" {{if eq .NbChecked "4" }}checked="checked" {{end}}>
+            <label for="4">4</label><br>
+            <input type="radio" id="5" name="members number" value="5" {{if eq .NbChecked "5" }}checked="checked" {{end}}>
+            <label for="5">5</label><br>
+            <input type="radio" id="6" name="members number" value="6" {{if eq .NbChecked "6" }}checked="checked" {{end}}>
+            <label for="6">6</label><br>
+            <input type="radio" id="7" name="members number" value="7" {{if eq .NbChecked "7" }}checked="checked" {{end}}>
+            <label for="7">7</label><br>
+            <input type="submit" value="Filter">
+        </form>
         {{range .Artists}}
         <a class="card" href="/{{.Name}}">
             <img class="card-img" src={{.Image}} alt={{.Name}} >

@@ -10,8 +10,8 @@ import (
 const apiURL = "https://groupietrackers.herokuapp.com/api/"
 
 type listPage struct {
-	Artists []artistData
-	nbChecked string
+	Artists   []artistData
+	NbChecked string
 }
 
 type artistPage struct {
@@ -45,7 +45,6 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	
 	checkErr(req.ParseForm())
 	membersNb, ok := req.Form["members number"]
 	var homePage *listPage
@@ -56,8 +55,8 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		}
 		filteredArtists := filter(artistsData, membersNb[0], checkMembersNb)
 		homePage = &listPage{
-			Artists: filteredArtists,
-			nbChecked: membersNb[0],
+			Artists:   filteredArtists,
+			NbChecked: membersNb[0],
 		}
 	} else {
 		if req.Method != "GET" {
@@ -66,12 +65,8 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		}
 		homePage = &listPage{
 			Artists: artistsData,
-			nbChecked: "1",
 		}
 	}
-	// fmt.Println("membersNb:", membersNb, "ok:", ok, "\n", artistsData)
-	
-
 
 	indexTmpl.Execute(w, homePage)
 }
