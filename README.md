@@ -61,4 +61,4 @@ erDiagram
 - Sanitize input from api
 - check api data
 - proper display of artist page
-- responsiveness
+- responsivenessaa
