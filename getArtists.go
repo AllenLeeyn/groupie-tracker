@@ -4,6 +4,7 @@ type artistData struct {
 	Image        string
 	Name         string
 	Members      []string
+	MembersCount int
 	CreationDate int
 	FirstAlbum   string
 	Locations    []string
@@ -20,6 +21,7 @@ func getArtist() {
 			Image:        artists[i].Image,
 			Name:         artists[i].Name,
 			Members:      artists[i].Members,
+			MembersCount: len(artists[i].Members),
 			CreationDate: artists[i].CreationDate,
 			FirstAlbum:   artists[i].FirstAlbum,
 			Locations:    locLst.Locations[i].Locations,
