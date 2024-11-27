@@ -13,11 +13,6 @@
 - can't crash at any time
 - host it on github?
 
-## steps
-1. send request to api
-2. open response from api
-3. decode JSON
-4. display data from api
 
 ```mermaid
 erDiagram
@@ -58,7 +53,40 @@ erDiagram
 - search-bar (BACK-END 10%)
 
 ## Tasks
-- Sanitize input from api
-- check api data
-- proper display of artist page
-- responsiveness
+- vlidate data from api (Anass)
+- Sanitize data from api (Anass)
+    - use dates to calculate number of performances
+    - use location to calculate number pf countries performed in
+- sorting of list
+
+- index page. Display: (Allen)
+    - image
+    - name
+    - creation date
+    - first album
+    - number of members 
+    - (number of performances? number of countries performed in?)
+- dropdown list to select sorting criteria and order (Allen)
+- band's bio: display all info (Allen)
+- responsiveness (Allen)
+
+filters: (Anass)
+- filter by creation date
+- first album
+- number of members
+- locations of concerts
+- a range filter
+- a checkbox filter
+- we can implement this early and use it to fulfill the requirement of using all four sets of data
+
+visulizations: (Allen?)
+- manipulating the data and displaying it in the most presentable way possible to you
+- Schneiderman's 8 Golden Rules of Interface Design
+    - strive for consistency
+    - enable frequent users to use shortcut
+    - offer informative feedback
+    - design dialogue to yield closure
+    - offer simple error handling
+    - permit easy reversal of actions
+    - support internal locus of control
+    - reduce shirt-term memory load
