@@ -10,24 +10,27 @@
 </head>
 <body>
     <header class="top-bar">
-        <a href="/">groupie-tracker</a>
+        <a href="/">groupie<br>-tracker</a>
+
+        <div class="options-container">
+            <form class="sort-options" action="/" method="get">
+                <label for="sort">Sort by:</label>
+                <select name="sort" id="sort" onchange="this.form.submit()">
+                    <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
+                    <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
+                </select>
+            </form>
+        </div>
     </header>
+
 
     <div class="container">
         {{range .Artists}}
         <a class="card" href="/{{.Name}}">
             <img class="card-img" src={{.Image}} alt={{.Name}} >
-            <div class="card-div">
-                <p style="font-size: large; color: #fff;">{{.Name}}</p>
-                <p>Created on: {{.CreationDate}}</p>
-                <p>First Album: {{.FirstAlbum}}</p>
-                <p>No. of Performance: {{.Performances}}</p>
-            </div>
-            <div class="card-div">
-                <p>Members:</p>
-                {{range .Members}}
-                    <p>{{.}}</p>
-                {{end}}
+            <div>
+                <p>{{.Name}}</p>
+                <p>Since {{.CreationDate}}<br><br></p>
             </div>
         </a>
         {{end}}
