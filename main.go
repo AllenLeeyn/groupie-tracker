@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -53,7 +52,7 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		filteredArtists := filter(artistsData, membersNb[0], checkMembersNb)
+		filteredArtists := filterArtists(artistsData, membersNb)
 		homePage = &listPage{
 			Artists:   filteredArtists,
 			NbChecked: membersNb[0],
