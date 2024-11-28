@@ -10,7 +10,7 @@ const apiURL = "https://groupietrackers.herokuapp.com/api/"
 
 type listPage struct {
 	Artists   []artistData
-	NbChecked string
+	NbChecked []string
 }
 
 type artistPage struct {
@@ -55,7 +55,7 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		filteredArtists := filterArtists(artistsData, membersNb)
 		homePage = &listPage{
 			Artists:   filteredArtists,
-			NbChecked: membersNb[0],
+			NbChecked: membersNb,
 		}
 	} else {
 		if req.Method != "GET" {
