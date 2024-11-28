@@ -53,6 +53,7 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		filteredArtists := filterArtists(artistsData, membersNb)
+		sortAlph(filteredArtists)
 		homePage = &listPage{
 			Artists:   filteredArtists,
 			NbChecked: membersNb,
@@ -62,6 +63,7 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
+		sortAlph(artistsData)
 		homePage = &listPage{
 			Artists: artistsData,
 		}
