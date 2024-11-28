@@ -1,10 +1,20 @@
 package main
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func checkMembersNb(artist artistData, membersNb string) bool {
 	nb, _ := strconv.Atoi(membersNb)
 	return len(artist.Members) == nb
+}
+
+func compareFADate(artist artistData, date string) bool {
+	if strings.Compare(artist.FirstAlbum, date) == 0 {
+		return true
+	}
+	return false
 }
 
 func filterArtists(arr []artistData, membersNbs []string) []artistData {
