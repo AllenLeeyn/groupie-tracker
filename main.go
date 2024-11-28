@@ -11,6 +11,7 @@ const apiURL = "https://groupietrackers.herokuapp.com/api/"
 type listPage struct {
 	Artists []artistData
 	SortBy  string
+	Order   string
 }
 
 type artistPage struct {
