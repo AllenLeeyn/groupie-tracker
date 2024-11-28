@@ -13,18 +13,18 @@
         <a href="/">groupie<br>-tracker</a>
     </header>
 
-    <div class="container">
+    <div class="artist-container">
         <div class="all-info">
-            <div class="top-data">
+            <div class="data-row">
                 <div class="name-since">
                     <img src={{.Artist.Image}} alt={{.Artist.Name}} >
                 </div>
                 <div class="name-since">
                     <h1>{{.Artist.Name}}</h1>
-                    <p>Since {{.Artist.CreationDate}}<br><br></p>
+                    <p>Started {{.Artist.CreationDate}}<br><br></p>
 
                     {{if gt .Artist.MembersCount 1}}
-                        <h3>Members:</h3>
+                        <h4>Members:</h4>
                         {{range .Artist.Members}}
                         <p>- {{.}}</p>
                         {{end}}
@@ -32,9 +32,30 @@
                 </div>
             </div>
 
-            <p>First Album: {{.Artist.FirstAlbum}}</p>
-            <p>No. of Performance: {{.Artist.Performances}}</p>
+            <div class="data-row">
+                <div class="data-col">
+                    <h4>First Album:</h4> 
+                    <p>{{.Artist.FirstAlbum}}<br><br></p>
+                    <h4>No. of Performance:</h4>
+                    <p>{{.Artist.Performances}}<br><br></p>
+                    <h4>No. of Countries Perfomed:</h4>
+                    <p>{{.Artist.LocationsCount}}</p>
+                </div>
+                <div class="data-col">
+                    {{if gt .Artist.MembersCount 0}}
+                    <h4>Performances:</h4>
+                        {{range $key, $value := .Artist.Locations}}
+                        <p>{{$key}}</p>
+                            {{range $value}}
+                                <p>- {{.}}</p>
+                            {{end}}
+                        <br>
+                        {{end}}
+                    {{end}}
+                </div>
+            </div>
         </div>
+        <button class="back-button" onclick="window.history.back()"><</button>
     </div>
 
     <footer class="footer">
