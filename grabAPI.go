@@ -102,6 +102,7 @@ func checkAPIData() {
 			log.Printf("ERROR: Entry [%v] does not tally\n", i)
 			log.Printf("relations %v v locations %v\n", locCount, len(locs.Lst[i].Locations))
 			log.Printf("relations %v v dates %v\n", datesCount, len(dates.Lst[i].Dates))
+			log.Println("=========================================")
 		}
 	}
 }
