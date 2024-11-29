@@ -13,27 +13,34 @@
         <a href="/">groupie-tracker</a>
     </header>
 
+    <div class="options-container">
+        <form class="sort-options" action="/" method="post">
+            <button name="switch-order" id="switch-order" class="sort-order" type="submit" value={{.Order}}>
+                {{.Order}}
+            </button>
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" onchange="this.form.submit()">
+                <option value="default" {{if eq .SortBy "default"}}selected{{end}}>default</option>
+                <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
+                <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
+            </select>
+        </form>
+    </div>
+
     <div class="container">
         {{range .Artists}}
         <a class="card" href="/{{.Name}}">
             <img class="card-img" src={{.Image}} alt={{.Name}} >
-            <div class="card-div">
-                <p style="font-size: large; color: #fff;">{{.Name}}</p>
-                <p>Created on: {{.CreationDate}}</p>
-                <p>First Album: {{.FirstAlbum}}</p>
-                <p>No. of Performance: {{.Performances}}</p>
-            </div>
-            <div class="card-div">
-                <p>Members:</p>
-                {{range .Members}}
-                    <p>{{.}}</p>
-                {{end}}
+            <div>
+                <p>{{.Name}}</p>
+                <p>Started {{.CreationDate}}<br><br></p>
             </div>
         </a>
         {{ else }}
             <h2>Found no artist</h2>
         {{end}}
     </div>
+    <button class="back-button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">▲</button>
 
     <footer class="footer">
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>

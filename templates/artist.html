@@ -13,14 +13,49 @@
         <a href="/">groupie-tracker</a>
     </header>
 
-    <div class="container">
-        <div class="card">
-            <img class="card-img" src={{.Artist.Image}} alt={{.Artist.Name}} >
-            <p style="font-size: large; color: #fff;">{{.Artist.Name}}</p>
-            <p>Created on: {{.Artist.CreationDate}}</p>
-            <p>First Album: {{.Artist.FirstAlbum}}</p>
-            <p>No. of Performance: {{.Artist.Performances}}</p>
+    <div class="artist-container">
+        <div class="all-info">
+            <div class="data-row">
+                <div class="name-since">
+                    <img src={{.Artist.Image}} alt={{.Artist.Name}} >
+                </div>
+                <div class="name-since">
+                    <h1>{{.Artist.Name}}</h1>
+                    <p>Started {{.Artist.CreationDate}}<br><br></p>
+
+                    {{if gt .Artist.MembersCount 1}}
+                        <h4>Members:</h4>
+                        {{range .Artist.Members}}
+                        <p>- {{.}}</p>
+                        {{end}}
+                    {{end}}
+                </div>
+            </div>
+
+            <div class="data-row">
+                <div class="data-col">
+                    <h4>First Album:</h4> 
+                    <p>{{.Artist.FirstAlbum}}<br><br></p>
+                    <h4>No. of Performance:</h4>
+                    <p>{{.Artist.Performances}}<br><br></p>
+                    <h4>No. of Countries Perfomed:</h4>
+                    <p>{{.Artist.LocCount}}</p>
+                </div>
+                <div class="data-col">
+                    {{if gt .Artist.MembersCount 0}}
+                    <h4>Performances:</h4>
+                        {{range $key, $value := .Artist.LocDate}}
+                        <p>{{$key}}</p>
+                            {{range $value}}
+                                <p>- {{.}}</p>
+                            {{end}}
+                        <br>
+                        {{end}}
+                    {{end}}
+                </div>
+            </div>
         </div>
+        <button class="back-button" onclick="window.history.back()">◀</button>
     </div>
 
     <footer class="footer">

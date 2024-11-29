@@ -14,42 +14,39 @@ type artist struct {
 	Members      []string `json:"members"`
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"dates"`
-	Relations    string   `json:"relations"`
+	MembersCount int
+	LocDate      map[string][]string
+	LocCount     int
+	Performances int
 }
 
-var artists []artist
+var artistsLst []artist
 
-type locations struct {
-	Id        int      `json:"id"`
-	Locations []string `json:"locations"`
-	Dates     string   `json:"dates"`
+var locs struct {
+	Lst []struct {
+		Id        int      `json:"id"`
+		Locations []string `json:"locations"`
+		Dates     string   `json:"dates"`
+	} `json:"index"`
 }
 
-var locLst struct {
-	Locations []locations `json:"index"`
+var dates struct {
+	Lst []struct {
+		Id    int      `json:"id"`
+		Dates []string `json:"dates"`
+	} `json:"index"`
 }
 
-type dates struct {
-	Id    int      `json:"id"`
-	Dates []string `json:"dates"`
+var rels struct {
+	Lst []struct {
+		Id             int                 `json:"id"`
+		DatesLocations map[string][]string `json:"datesLocations"`
+	} `json:"index"`
 }
 
-var dateLst struct {
-	Dates []dates `json:"index"`
-}
-
-type relations struct {
-	Id             int                 `json:"id"`
-	DatesLocations map[string][]string `json:"datesLocations"`
-}
-
-var relLst struct {
-	Relations []relations `json:"index"`
-}
-
-func grabAPI() {
+// getAPIData() sends a http GET request to API and
+// unmarshal the json data and store them in their corresponding struct
+func getAPIData() {
 	dataNames := []string{"artists", "locations", "dates", "relation"}
 
 	for _, dataName := range dataNames {
@@ -65,17 +62,47 @@ func grabAPI() {
 
 		switch dataName {
 		case "artists":
-			err := json.Unmarshal(apiRaw, &artists)
+			err := json.Unmarshal(apiRaw, &artistsLst)
 			checkErr(err)
 		case "locations":
-			err := json.Unmarshal(apiRaw, &locLst)
+			err := json.Unmarshal(apiRaw, &locs)
 			checkErr(err)
 		case "dates":
-			err := json.Unmarshal(apiRaw, &dateLst)
+			err := json.Unmarshal(apiRaw, &dates)
 			checkErr(err)
 		case "relation":
-			err := json.Unmarshal(apiRaw, &relLst)
+			err := json.Unmarshal(apiRaw, &rels)
 			checkErr(err)
+		}
+	}
+	checkAPIData()
+}
+
+// checkAPIData() does simple check to see if the data matches
+func checkAPIData() {
+	artistsCount := len(artistsLst)
+	if len(locs.Lst) != artistsCount ||
+		len(dates.Lst) != artistsCount ||
+		len(rels.Lst) != artistsCount {
+		log.Fatal("ERROR: Entry count does not tally")
+	}
+
+	for i := range artistsCount {
+		locCount := len(rels.Lst[i].DatesLocations)
+		datesCount := func() (count int) {
+			for _, dates := range rels.Lst[i].DatesLocations {
+				for range dates {
+					count++
+				}
+			}
+			return
+		}()
+		if locCount != len(locs.Lst[i].Locations) ||
+			datesCount != len(dates.Lst[i].Dates) {
+			log.Printf("ERROR: Entry [%v] does not tally\n", i)
+			log.Printf("relations %v v locations %v\n", locCount, len(locs.Lst[i].Locations))
+			log.Printf("relations %v v dates %v\n", datesCount, len(dates.Lst[i].Dates))
+			log.Println("=========================================")
 		}
 	}
 }
