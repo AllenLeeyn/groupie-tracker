@@ -10,7 +10,7 @@
 </head>
 <body>
     <header class="top-bar">
-        <a href="/">groupie<br>-tracker</a>
+        <a href="/">groupie-tracker</a>
     </header>
 
     <div class="artist-container">
@@ -39,12 +39,12 @@
                     <h4>No. of Performance:</h4>
                     <p>{{.Artist.Performances}}<br><br></p>
                     <h4>No. of Countries Perfomed:</h4>
-                    <p>{{.Artist.LocationsCount}}</p>
+                    <p>{{.Artist.LocCount}}</p>
                 </div>
                 <div class="data-col">
                     {{if gt .Artist.MembersCount 0}}
                     <h4>Performances:</h4>
-                        {{range $key, $value := .Artist.Locations}}
+                        {{range $key, $value := .Artist.LocDate}}
                         <p>{{$key}}</p>
                             {{range $value}}
                                 <p>- {{.}}</p>
@@ -55,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <button class="back-button" onclick="window.history.back()"><</button>
+        <button class="back-button" onclick="window.history.back()">⯇</button>
     </div>
 
     <footer class="footer">
