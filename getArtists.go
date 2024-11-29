@@ -4,47 +4,23 @@ import (
 	"strings"
 )
 
-type artistData struct {
-	Index          int
-	Image          string
-	Name           string
-	Members        []string
-	MembersCount   int
-	CreationDate   int
-	FirstAlbum     string
-	Locations      map[string][]string
-	LocationsCount int
-	Performances   int
-	Relations      map[string][]string
-}
-
-var artistsData []artistData
-
-func getArtist() {
-	grabAPI()
-	for i := range artists {
-		artistsData = append(artistsData, artistData{
-			Index:          artists[i].Id,
-			Image:          artists[i].Image,
-			Name:           artists[i].Name,
-			Members:        artists[i].Members,
-			MembersCount:   len(artists[i].Members),
-			CreationDate:   artists[i].CreationDate,
-			FirstAlbum:     artists[i].FirstAlbum,
-			Locations:      getRelationsClean(relLst.Relations[i].DatesLocations),
-			LocationsCount: getLocCount(locLst.Locations[i].Locations),
-			Performances:   len(dateLst.Dates[i].Dates),
-			Relations:      relLst.Relations[i].DatesLocations,
-		})
+// getArtistsData() gets the API data and makes them presentable
+func getArtistsData() {
+	getAPIData()
+	for i := 0; i < len(artistsLst); i++ {
+		artistsLst[i].MembersCount = len(artistsLst[i].Members)
+		artistsLst[i].LocDate = getRelClean(rels.Lst[i].DatesLocations)
+		artistsLst[i].LocCount = getLocCount(locs.Lst[i].Locations)
+		artistsLst[i].Performances = len(dates.Lst[i].Dates)
 	}
 }
 
+// getLocCount uses locLst to count
+// how many countries an artist has performed in
 func getLocCount(locations []string) int {
-
 	locLst := make(map[string]string)
 	for _, loc := range locations {
 		splited := strings.Split(loc, "-")
-
 		if len(splited) == 2 {
 			locLst[splited[1]] = splited[0]
 		}
@@ -52,26 +28,25 @@ func getLocCount(locations []string) int {
 	return len(locLst)
 }
 
-func getRelationsClean(ogRelLst map[string][]string) map[string][]string {
+// getRelClean() makes the key value in the original Relations List presentable
+func getRelClean(ogRelLst map[string][]string) map[string][]string {
 	newRelLst := make(map[string][]string)
 
+	capitalize := func(words []string) (result string) {
+		for i := 0; i < len(words); i++ {
+			if words[i] == "usa" || words[i] == "uk" {
+				words[i] = strings.ToUpper(words[i])
+			} else {
+				words[i] = strings.ToTitle(words[i])
+			}
+		}
+		return strings.Join(words, " ")
+	}
 	for key, value := range ogRelLst {
-		newKey := strings.ReplaceAll(strings.ReplaceAll(key, "_", " "), "-", ", ")
-		newKey = capitalize(newKey)
-
+		newKey := strings.ReplaceAll(key, "_", " ")
+		newKey = strings.ReplaceAll(newKey, "-", ", ")
+		newKey = capitalize(strings.Split(newKey, " "))
 		newRelLst[newKey] = value
 	}
-
 	return newRelLst
-}
-
-func capitalize(s string) (result string) {
-	splited := strings.Split(s, " ")
-	for _, word := range splited {
-		if word == "usa" || word == "uk" {
-			word = strings.ToUpper(word)
-		}
-		result += strings.ToUpper(string(word[0])) + word[1:] + " "
-	}
-	return result[:len(result)-1]
 }

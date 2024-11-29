@@ -9,22 +9,21 @@ import (
 const apiURL = "https://groupietrackers.herokuapp.com/api/"
 
 type listPage struct {
-	Artists []artistData
+	Artists []artist
 	SortBy  string
 	Order   string
 }
 
 type artistPage struct {
-	Artist artistData
+	Artist artist
 }
 
 var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
 var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
 
 func main() {
-	getArtist()
+	getArtistsData()
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
-
 	http.HandleFunc("/", homeHandler)
 
 	port := "localhost:8081"
