@@ -36,6 +36,10 @@
             <legend>Data of first album:</legend>
             <input type="text" name="first album date" {{ if .DateFA }} value="{{ .DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />
 
+            <legend>location(s) of concerts</legend>
+            <!-- <input type="text" name="first album date" {{ if .DateFA }} value="{{ .DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} /> -->
+            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Locations}}{{.}} {{ end }}</textarea><br><br>
+
             <input type="submit" value="Filter" name="submit button">
         </form>
         {{range .Artists}}
