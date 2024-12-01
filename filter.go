@@ -46,10 +46,6 @@ func differenceElements(a []artist, b []artist) []artist {
 }
 
 func filterLocations(arr []artist, locations []string) []artist {
-	// fmt.Println("LocDate:", arr[0].)
-	fmt.Println("---------------------")
-	// spew.Dump(arr[0].LocDate)
-	fmt.Println("---------------------")
 	newArr := []artist{}
 	for _, loc := range locations {
 		tempFiltered := filter(arr, loc, compareLoc)
@@ -59,9 +55,17 @@ func filterLocations(arr []artist, locations []string) []artist {
 	return newArr
 }
 
+func compareCreationDate(artist artist, creationDate string) bool {
+	intDate, _ := strconv.Atoi(creationDate)
+	return artist.CreationDate == intDate
+}
+
 func filter(arr []artist, criteria string, check func(artist, string) bool) []artist {
 	newArr := []artist{}
 	for _, artist := range arr {
+		if isArtistInArr(newArr, artist.Name) {
+			fmt.Println("?0")
+		}
 		if check(artist, criteria) && !isArtistInArr(newArr, artist.Name) {
 			newArr = append(newArr, artist)
 		}

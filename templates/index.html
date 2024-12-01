@@ -52,6 +52,15 @@
             <legend>location(s) of concerts</legend>
             <!-- <input type="text" name="first album date" {{ if .DateFA }} value="{{ .DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} /> -->
             <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Locations}}{{.}} {{ end }}</textarea><br><br>
+            {{if .Artists}}
+            <div class="slidecontainer">
+                <input type="range" name="range" min="{{.EarliestDt}}" max="{{.LatestDt}}" value="{{.EarliestDt}}" class="slider" id="myRange">
+                <label for="myRange">apply range value
+                    <input type="checkbox" name="applyRange" {{if eq .ApplyRange "1" }} checked {{end}}>
+                </label>
+                <div id="range-current-value"></div>
+            </div>
+            {{end}}
 
             <input type="submit" value="Filter" name="submit button">
         </form>
@@ -73,4 +82,15 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
+<script>
+    var slider = document.getElementById("myRange")
+    var output = document.getElementById("range-current-value");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+    }
+
+</script>
 </html>
