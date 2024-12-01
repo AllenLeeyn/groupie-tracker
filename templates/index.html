@@ -29,41 +29,6 @@
 
     <div class="container">
 
-        <form action="/" method="post">
-            <legend>Members number:</legend>
-            <input type="checkbox" id="1" name="members number" value="1" {{ range .NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
-            <label for="1">1</label>
-            <input type="checkbox" id="2" name="members number" value="2" {{ range .NbChecked }} {{if eq . "2" }} checked="checked" {{end}} {{ end }}>
-            <label for="2">2</label>
-            <input type="checkbox" id="3" name="members number" value="3" {{ range .NbChecked }} {{if eq . "3" }} checked="checked" {{end}} {{ end }}>
-            <label for="3">3</label>
-            <input type="checkbox" id="4" name="members number" value="4" {{ range .NbChecked }} {{if eq . "4" }} checked="checked" {{end}} {{ end }}>
-            <label for="4">4</label>
-            <input type="checkbox" id="5" name="members number" value="5" {{ range .NbChecked }} {{if eq . "5" }} checked="checked" {{end}} {{ end }}>
-            <label for="5">5</label>
-            <input type="checkbox" id="6" name="members number" value="6" {{ range .NbChecked }} {{if eq . "6" }} checked="checked" {{end}} {{ end }}>
-            <label for="6">6</label>
-            <input type="checkbox" id="7" name="members number" value="7" {{ range .NbChecked }} {{if eq . "7" }} checked="checked" {{end}} {{ end }}>
-            <label for="7">7</label><br>
-
-            <legend>Data of first album:</legend>
-            <input type="text" name="first album date" {{ if .DateFA }} value="{{ .DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />
-
-            <legend>location(s) of concerts</legend>
-            <!-- <input type="text" name="first album date" {{ if .DateFA }} value="{{ .DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} /> -->
-            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Locations}}{{.}} {{ end }}</textarea><br><br>
-            {{if .Artists}}
-            <div class="slidecontainer">
-                <input type="range" name="range" min="{{.EarliestDt}}" max="{{.LatestDt}}" value="{{.EarliestDt}}" class="slider" id="myRange">
-                <label for="myRange">apply range value
-                    <input type="checkbox" name="applyRange" {{if eq .ApplyRange "1" }} checked {{end}}>
-                </label>
-                <div id="range-current-value"></div>
-            </div>
-            {{end}}
-
-            <input type="submit" value="Filter" name="submit button">
-        </form>
         {{range .Artists}}
         <a class="card" href="/{{.Name}}">
             <img class="card-img" src={{.Image}} alt={{.Name}} >
@@ -82,15 +47,4 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
-<script>
-    var slider = document.getElementById("myRange")
-    var output = document.getElementById("range-current-value");
-    output.innerHTML = slider.value; // Display the default slider value
-
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function() {
-        output.innerHTML = this.value;
-    }
-
-</script>
 </html>
