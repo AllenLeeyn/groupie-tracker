@@ -165,6 +165,10 @@ html, body {
     padding: 5px 10px;
 }
 
+.container  {
+    color: #000;
+}
+
 @media (max-width: 480px) {
     .data-row{
         display: flex;
