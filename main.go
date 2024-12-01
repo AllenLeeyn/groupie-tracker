@@ -82,10 +82,10 @@ func checkGetLocations(locationsArr []string) []string {
 	return strings.Fields(locationsArr[0])
 }
 
-func sortArtists(w http.ResponseWriter, req *http.Request) (string, string, error) {
+func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string, string, error) {
 	order := "▼"
 	sortCriteria := "default"
-	sortLst(sortCriteria)
+	sortLst(arr, sortCriteria)
 
 	// POST method is used for sorting list.
 	// Invalid request is ignore and use default settings.
@@ -94,11 +94,11 @@ func sortArtists(w http.ResponseWriter, req *http.Request) (string, string, erro
 		if sortCriteria != "creation_date" && sortCriteria != "name" {
 			sortCriteria = "default"
 		}
-		sortLst(sortCriteria)
+		sortLst(arr, sortCriteria)
 		pageOrder := req.FormValue("switch-order")
 		if pageOrder == "▼" {
 			order = "▲"
-			revLst()
+			revLst(arr)
 		} else if pageOrder == "▲" {
 			order = "▼"
 		}
@@ -135,7 +135,7 @@ func arrangeArtists(w http.ResponseWriter, req *http.Request) (*listPage, error)
 	// 	newArtistsLst = filterLocations(newArtistsLst, locations)
 	// }
 	// sortAlph(newArtistsLst)
-	order, sortCriteria, err := sortArtists(w, req)
+	order, sortCriteria, err := sortArtists(w, req, newArtistsLst)
 	checkErr(err)
 	homePage = &listPage{
 		Artists:   newArtistsLst,

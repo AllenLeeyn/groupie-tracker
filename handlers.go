@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"sort"
 )
@@ -57,24 +58,25 @@ func artistHandler(w http.ResponseWriter, index int) {
 }
 
 // sortLst() sorts artistLst based on sortCriteria in ascending order.
-func sortLst(sortCriteria string) {
-	sort.Slice(artistsLst, func(i, j int) bool {
+func sortLst(arr []artist, sortCriteria string) {
+	fmt.Println("effectively used")
+	sort.Slice(arr, func(i, j int) bool {
 		switch sortCriteria {
 		case "name":
-			return artistsLst[i].Name < artistsLst[j].Name
+			return arr[i].Name < arr[j].Name
 		case "creation_date":
-			return artistsLst[i].CreationDate < artistsLst[j].CreationDate
+			return arr[i].CreationDate < arr[j].CreationDate
 		}
-		return artistsLst[i].Id < artistsLst[j].Id
+		return arr[i].Id < arr[j].Id
 	})
 }
 
 // revLst() reverses artistsLst
-func revLst() {
-	start, end := 0, len(artistsLst)-1
+func revLst(arr []artist) {
+	start, end := 0, len(arr)-1
 	for start < end {
-		artistsLst[start], artistsLst[end] =
-			artistsLst[end], artistsLst[start]
+		arr[start], arr[end] =
+			arr[end], arr[start]
 		start++
 		end--
 	}
