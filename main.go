@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"regexp"
@@ -24,6 +23,8 @@ type listPage struct {
 	Locations []string
 }
 
+var homePage *listPage = &listPage{}
+
 type artistPage struct {
 	Artist artist
 }
@@ -36,6 +37,8 @@ type errorPage struct {
 func (e errorPage) Error() string {
 	return e.errorMsg
 }
+
+var newArtistsLst []artist = slices.Clone(artistsLst)
 
 var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
 var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
@@ -51,7 +54,6 @@ func main() {
 }
 
 func checkFADate(date []string) error {
-	fmt.Println(date)
 	if len(date) == 0 {
 		return errors.New("invalid date format")
 	}
@@ -71,7 +73,6 @@ func checkGetFADate(dateArr []string) string {
 	} else {
 		date = ""
 	}
-	fmt.Println(date)
 	return date
 }
 
@@ -111,19 +112,18 @@ func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string
 
 // arrangeArtists checks for method error and sorts/filter artists
 // filter by membersNb, dataFA
-func arrangeArtists(w http.ResponseWriter, req *http.Request) (*listPage, error) {
-	var homePage *listPage
+func arrangeArtists(w http.ResponseWriter, req *http.Request) error {
+	// var homePage *listPage
 
 	checkErr(req.ParseForm())
 	// make a new copy, so when the artists' array is filtered, the artists
-	// who are not displayed aren't lost for the whole execution of the program 
-	newArtistsLst := slices.Clone(artistsLst)
+	// who are not displayed aren't lost for the whole execution of the program
 	membersNb := req.Form["members number"]
 	dateFA := checkGetFADate(req.Form["first album date"]) // FA: first album
 	locations := checkGetLocations(req.Form["locations"])
 	if (len(req.Form["submit button"]) == 1 && req.Method != "POST") ||
 		((len(req.Form["submit button"]) == 0 && len(req.Form["sort"]) == 0 && len(req.Form["switch-order"]) == 0) && req.Method != "GET") {
-		return nil, errorPage{405, "405 method not allowed"}
+		return errorPage{405, "405 method not allowed"}
 	}
 	if len(membersNb) != 0 {
 		newArtistsLst = filterArtists(newArtistsLst, membersNb)
@@ -145,7 +145,13 @@ func arrangeArtists(w http.ResponseWriter, req *http.Request) (*listPage, error)
 		Order:     order,
 		SortBy:    sortCriteria,
 	}
-	return homePage, nil
+	// homePage.Artists = newArtistsLst
+	// homePage.NbChecked = membersNb
+	// homePage.DateFA = dateFA
+	// homePage.Locations = locations
+	// homePage.Order = order
+	// homePage.SortBy = sortCriteria
+	return nil
 }
 
 func homeHandler(w http.ResponseWriter, req *http.Request) {
@@ -161,8 +167,11 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "404 not found", http.StatusNotFound)
 		return
 	}
+	if req.Method != "POST" {
+		newArtistsLst = slices.Clone(artistsLst)
+	}
 
-	homePage, err := arrangeArtists(w, req)
+	err := arrangeArtists(w, req)
 	if err != nil {
 		errPage := err.(errorPage) // type assertion
 		http.Error(w, errPage.errorMsg, errPage.errorCode)

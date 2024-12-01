@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"sort"
 )
@@ -59,7 +58,6 @@ func artistHandler(w http.ResponseWriter, index int) {
 
 // sortLst() sorts artistLst based on sortCriteria in ascending order.
 func sortLst(arr []artist, sortCriteria string) {
-	fmt.Println("effectively used")
 	sort.Slice(arr, func(i, j int) bool {
 		switch sortCriteria {
 		case "name":
