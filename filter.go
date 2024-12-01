@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 )
 
 func checkMembersNb(artist artist, membersNb string) bool {
@@ -9,14 +11,14 @@ func checkMembersNb(artist artist, membersNb string) bool {
 	return len(artist.Members) == nb
 }
 
-// func compareLoc(artist artist, loc string) bool {
-// 	for _, artistLoc := range artist.Locations {
-// 		if artistLoc == loc {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
+func compareLoc(artist artist, loc string) bool {
+	for artistLoc := range artist.LocDate {
+		if strings.Contains(artistLoc, loc) {
+			return true
+		}
+	}
+	return false
+}
 
 func compareFADate(artist artist, date string) bool {
 	return artist.FirstAlbum == date
@@ -43,15 +45,19 @@ func differenceElements(a []artist, b []artist) []artist {
 	return difference
 }
 
-// func filterLocations(arr []artist, locations []string) []artist {
-// 	newArr := []artist{}
-// 	for _, loc := range locations {
-// 		tempFiltered := filter(arr, loc, compareLoc)
-// 		tempFiltered = differenceElements(tempFiltered, newArr)
-// 		newArr = append(newArr, tempFiltered...)
-// 	}
-// 	return newArr
-// }
+func filterLocations(arr []artist, locations []string) []artist {
+	// fmt.Println("LocDate:", arr[0].)
+	fmt.Println("---------------------")
+	// spew.Dump(arr[0].LocDate)
+	fmt.Println("---------------------")
+	newArr := []artist{}
+	for _, loc := range locations {
+		tempFiltered := filter(arr, loc, compareLoc)
+		tempFiltered = differenceElements(tempFiltered, newArr)
+		newArr = append(newArr, tempFiltered...)
+	}
+	return newArr
+}
 
 func filter(arr []artist, criteria string, check func(artist, string) bool) []artist {
 	newArr := []artist{}

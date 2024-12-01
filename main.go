@@ -38,8 +38,6 @@ func (e errorPage) Error() string {
 	return e.errorMsg
 }
 
-var newArtistsLst []artist = slices.Clone(artistsLst)
-
 var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
 var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
 
@@ -114,6 +112,7 @@ func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string
 // filter by membersNb, dataFA
 func arrangeArtists(w http.ResponseWriter, req *http.Request) error {
 	// var homePage *listPage
+	var newArtistsLst []artist = slices.Clone(artistsLst)
 
 	checkErr(req.ParseForm())
 	// make a new copy, so when the artists' array is filtered, the artists
@@ -131,9 +130,9 @@ func arrangeArtists(w http.ResponseWriter, req *http.Request) error {
 	if dateFA != "" {
 		newArtistsLst = filter(newArtistsLst, dateFA, compareFADate)
 	}
-	// if len(locations) != 0 {
-	// 	newArtistsLst = filterLocations(newArtistsLst, locations)
-	// }
+	if len(locations) != 0 {
+		newArtistsLst = filterLocations(newArtistsLst, locations)
+	}
 	// sortAlph(newArtistsLst)
 	order, sortCriteria, err := sortArtists(w, req, newArtistsLst)
 	checkErr(err)
@@ -167,9 +166,9 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "404 not found", http.StatusNotFound)
 		return
 	}
-	if req.Method != "POST" {
-		newArtistsLst = slices.Clone(artistsLst)
-	}
+	// if req.Method != "POST" {
+	// 	newArtistsLst = slices.Clone(artistsLst)
+	// }
 
 	err := arrangeArtists(w, req)
 	if err != nil {
