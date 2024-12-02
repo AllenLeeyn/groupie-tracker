@@ -21,6 +21,9 @@
                 </div>
                 <div class="name-since">
                     <h1>{{.Artist.Name}}</h1>
+                    {{if and (eq .Artist.MembersCount 1) (ne .Artist.Name (index .Artist.Members 0))}}
+                    <p>({{index .Artist.Members 0}})</p>
+                    {{end}}
                     <p>Started {{.Artist.CreationDate}}<br><br></p>
 
                     {{if gt .Artist.MembersCount 1}}
