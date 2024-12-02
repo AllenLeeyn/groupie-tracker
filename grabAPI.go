@@ -88,15 +88,11 @@ func checkAPIData() {
 	}
 
 	for i := range artistsCount {
-		locCount := len(rels.Lst[i].DatesLocations)
-		datesCount := func() (count int) {
-			for _, dates := range rels.Lst[i].DatesLocations {
-				for range dates {
-					count++
-				}
-			}
-			return
-		}()
+		locCount, datesCount := len(rels.Lst[i].DatesLocations), 0
+		for _, dates := range rels.Lst[i].DatesLocations {
+			datesCount += len(dates)
+		}
+
 		if locCount != len(locs.Lst[i].Locations) ||
 			datesCount != len(dates.Lst[i].Dates) {
 			log.Printf("ERROR: Entry [%v] does not tally\n", i)

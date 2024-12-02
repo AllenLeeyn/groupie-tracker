@@ -15,7 +15,7 @@ func getArtistsData() {
 	}
 }
 
-// getLocCount uses locLst to count
+// getLocCount() uses locLst to count
 // how many countries an artist has performed in
 func getLocCount(locations []string) int {
 	locLst := make(map[string]string)
@@ -32,20 +32,16 @@ func getLocCount(locations []string) int {
 func getRelClean(ogRelLst map[string][]string) map[string][]string {
 	newRelLst := make(map[string][]string)
 
-	capitalize := func(words []string) (result string) {
-		for i := 0; i < len(words); i++ {
-			if words[i] == "usa" || words[i] == "uk" {
-				words[i] = strings.ToUpper(words[i])
-			} else {
-				words[i] = strings.ToTitle(words[i])
-			}
-		}
-		return strings.Join(words, " ")
-	}
 	for key, value := range ogRelLst {
 		newKey := strings.ReplaceAll(key, "_", " ")
 		newKey = strings.ReplaceAll(newKey, "-", ", ")
-		newKey = capitalize(strings.Split(newKey, " "))
+		newKey = func(words []string) string {
+			for i := 0; i < len(words); i++ {
+				words[i] = strings.ToUpper(words[i])
+			}
+			return strings.Join(words, " ")
+		}(strings.Split(newKey, " "))
+
 		newRelLst[newKey] = value
 	}
 	return newRelLst
