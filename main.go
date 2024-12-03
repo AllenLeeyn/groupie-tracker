@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"net/http"
 	"text/template"
@@ -22,19 +21,25 @@ type artistPage struct {
 }
 
 type errorPage struct {
-	errorCode int
-	errorMsg  string
+	ErrorCode int
+	ErrorMsg  string
 }
 
 func (e errorPage) Error() string {
-	return e.errorMsg
+	return e.ErrorMsg
 }
 
 var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
 var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
+var errTmpl = template.Must(template.ParseFiles("templates/error.html"))
 
 func main() {
-	getArtistsData()
+	err := getArtistsData()
+	if (err != errorPage{}) {
+		http.HandleFunc("/", func (w http.ResponseWriter, req *http.Request)  {
+			errTmpl.Execute(w, err)
+		})
+	}
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
 	http.HandleFunc("/", homeHandler)
 
@@ -43,7 +48,7 @@ func main() {
 	http.ListenAndServe(port, nil)
 }
 
-func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string, string, error) {
+func sortArtists(req *http.Request, arr []artist) (string, string, error) {
 	order := "▼"
 	sortCriteria := "default"
 	sortLst(arr, sortCriteria)
@@ -64,8 +69,7 @@ func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string
 			order = "▼"
 		}
 	} else if req.Method != http.MethodGet {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return "", "", errors.New("http error")
+		return "", "", MethodNotAllowedErr // should change it
 	}
 	return order, sortCriteria, nil
 }

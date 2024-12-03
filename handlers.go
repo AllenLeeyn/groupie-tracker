@@ -1,19 +1,47 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"slices"
 	"sort"
 )
 
+var (
+	NotFoundErr = errorPage{
+		ErrorCode: 404,
+		ErrorMsg:  "Oops! The page you're looking for doesn't exist.",
+	}
+	InternalServerErr = errorPage{
+		ErrorCode: 500,
+		ErrorMsg:  "Internal Server Error",
+	}
+	BadRequestErr = errorPage{
+		ErrorCode: 400,
+		ErrorMsg:  "Bad Request",
+	}
+	MethodNotAllowedErr = errorPage{
+		ErrorCode: http.StatusMethodNotAllowed,
+		ErrorMsg:  "Method Not Allowed",
+	}
+	BadGatewayErr = errorPage{
+		ErrorCode: http.StatusBadGateway,
+		ErrorMsg:  "Bad Gateway",
+	}
+)
+
 // arrangeArtists checks for method error and sorts/filter artists
-func arrangeArtists(w http.ResponseWriter, req *http.Request) error {
+func arrangeArtists(req *http.Request) error {
 	// var homePage *listPage
 	var newArtistsLst []artist = slices.Clone(artistsLst)
 
 	checkErr(req.ParseForm())
-	order, sortCriteria, err := sortArtists(w, req, newArtistsLst)
-	checkErr(err)
+	order, sortCriteria, err := sortArtists(req, newArtistsLst)
+	// // checkErr(err)
+	if err != nil {
+		return err
+	}
+	fmt.Println(err)
 	homePage = &listPage{
 		Artists: newArtistsLst,
 		Order:   order,
@@ -32,14 +60,17 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	if req.URL.Path != "/" {
-		http.Error(w, "404 not found", http.StatusNotFound)
+		w.WriteHeader(404)
+		errTmpl.Execute(w, NotFoundErr)
+
 		return
 	}
 
-	err := arrangeArtists(w, req)
+	err := arrangeArtists(req)
 	if err != nil {
 		errPage := err.(errorPage) // type assertion
-		http.Error(w, errPage.errorMsg, errPage.errorCode)
+		w.WriteHeader(errPage.ErrorCode)
+		errTmpl.Execute(w, errPage)
 		return
 	}
 	indexTmpl.Execute(w, homePage)

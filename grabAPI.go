@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -46,36 +47,49 @@ var rels struct {
 
 // getAPIData() sends a http GET request to API and
 // unmarshal the json data and store them in their corresponding struct
-func getAPIData() {
+func getAPIData() errorPage {
 	dataNames := []string{"artists", "locations", "dates", "relation"}
 
 	for _, dataName := range dataNames {
+		var err error
 		apiResp, err := http.Get(apiURL + dataName)
-		checkErr(err)
+		if err != nil {
+			return BadGatewayErr
+		}
 		defer apiResp.Body.Close()
 
-		if apiResp.StatusCode != http.StatusOK {
-			log.Fatalf("Error: %v", apiResp.StatusCode)
-		}
+		// if apiResp.StatusCode != http.StatusOK {
+		// 	log.Fatalf("Error: %v", apiResp.StatusCode)
+		// }
 		apiRaw, err := io.ReadAll(apiResp.Body)
-		checkErr(err)
+		if err != nil {
+			return BadGatewayErr
+		}
 
 		switch dataName {
 		case "artists":
-			err := json.Unmarshal(apiRaw, &artistsLst)
-			checkErr(err)
+			err = json.Unmarshal(apiRaw, &artistsLst)
+			// checkErr(err)
+		fmt.Println(err)
 		case "locations":
-			err := json.Unmarshal(apiRaw, &locs)
-			checkErr(err)
+			err = json.Unmarshal(apiRaw, &locs)
+			// checkErr(err)
+		fmt.Println(err)
 		case "dates":
-			err := json.Unmarshal(apiRaw, &dates)
-			checkErr(err)
+			err = json.Unmarshal(apiRaw, &dates)
+			// checkErr(err)
+		fmt.Println(err)
 		case "relation":
-			err := json.Unmarshal(apiRaw, &rels)
-			checkErr(err)
+			err = json.Unmarshal(apiRaw, &rels)
+			// checkErr(err)
+		fmt.Println(err)
+		}
+		if err != nil {
+			return NotFoundErr
 		}
 	}
 	checkAPIData()
+	return errorPage{}
 }
 
 // checkAPIData() does simple check to see if the data matches

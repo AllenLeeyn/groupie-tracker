@@ -76,14 +76,7 @@ html, body {
     font-weight: bold;
 }
 
-/* .sort-order:hover {
-    background-color: black;
-    color: yellow;
-    transition: background-color 0.3s ease, color 0.3s ease;
-} */
-
 #changeStyleButton {
-    /* background-color: yellow; */
     color: black;
     border: 2px solid black;
     padding: 5px 10px;
@@ -91,8 +84,9 @@ html, body {
     cursor: pointer;
     font-weight: bold;
 }
+
 /*--------------------------------------------------------------------------------------*/
-/* Base container styling */
+
 .container {
     display: flex;
     flex-direction: column; /* Align cards vertically like a list */
