@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <title>Page Not Found</title>
+    <link rel="stylesheet" href="/static/error.css">
+</head>
+<body>
+    <header class="top-bar">
+        <a href="/">groupie-tracker</a>
+    </header>
+
+    <main class="error-container">
+        <h1>{{.ErrorCode}}</h1>
+        <p>{{.ErrorMsg}}</p>
+        <a href="/" class="error-button">Return Home</a>
+    </main>
+
+    <footer class="footer">
+        <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
+    </footer>
+</body>
+</html>
