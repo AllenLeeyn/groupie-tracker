@@ -36,7 +36,7 @@ html, body {
     color: #900;
 }
 
-.options-container{
+/* .options-container{
     padding-top: 60px;
     padding-bottom: 10px;
     color: #000;
@@ -57,7 +57,71 @@ html, body {
 }
 .sort-order:hover{
     background-color: #aaa;
+} */
+
+.options-container {
+    margin-top: 50px;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid black;
+    justify-content: right;
 }
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.sort-options label {
+    font-weight: bold;
+    color: black;
+}
+
+.sort-options select {
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.sort-order {
+    /* background-color: yellow; */
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 2px solid black;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* .sort-order:hover {
+    background-color: black;
+    color: yellow;
+    transition: background-color 0.3s ease, color 0.3s ease;
+} */
+
+#changeStyleButton {
+    /* background-color: yellow; */
+    color: black;
+    border: 2px solid black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* #changeStyleButton:hover {
+    background-color: black;
+    color: yellow;
+    transition: background-color 0.3s ease, color 0.3s ease;
+} */
+
+/* ------------------------------------------------- */
 
 .container {
     display: flex;

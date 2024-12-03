@@ -53,7 +53,7 @@
 const button = document.getElementById('changeStyleButton');
 const stylesheet = document.getElementById('style');
 
-if (localStorage.getItem("cssFile") !== "")
+if (localStorage.getItem("cssFile") !== null)
     stylesheet.href = localStorage.getItem("cssFile")
 
 button.addEventListener('click', () => {
