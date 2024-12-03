@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
     <title>Groupie-tracker</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" id="style" href="/static/style.css">
 </head>
 <body>
-    <!-- <header class="top-bar">
+    <header class="top-bar">
         <a href="/">groupie-tracker</a>
     </header>
 
@@ -24,10 +24,13 @@
                 <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
                 <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
             </select>
+            <input id="cssFile" type="text" name="cssFile" style="display: none;">
         </form>
-    </div> -->
+    <button id="changeStyleButton">Change view</button>
+    </div>
 
-    <h2>Groupie tracker</h2>
+
+    <!-- <h2>Groupie tracker</h2> -->
     <div class="container">
 
         {{range .Artists}}
@@ -48,4 +51,49 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
+<script>
+    // Get references to the button and the <link> element
+const button = document.getElementById('changeStyleButton');
+const stylesheet = document.getElementById('style');
+// const cssFile = document.getElementById('cssFile')
+// var lastStyle = ""
+// console.log("last style: "+lastStyle)
+
+// // Add a click event listener to the button
+
+// window.onload = function () {
+//     // if (stylesheet.href.substring(stylesheet.href.length-"style.css".length) === 'style.css') {
+//     //     fileName = '/static/style.css';
+//     // }
+//     // else {
+//     //     fileName = '/static/style-list-view.css';
+//     // }
+//     // cssFile.textContent = fileName
+
+//     if (stylesheet.href !== "") {
+//         stylesheet.href = lastStyle
+//         console.log("last style call: "+lastStyle)
+//     }
+// }
+
+// if (!stylesheet.href.includes(".css") ) {
+//     stylesheet.href = '/static/style.css';
+// }
+
+
+button.addEventListener('click', () => {
+    // Change the href attribute of the <link> element to apply the new CSS file
+    // console.log("stylesheet:" + stylesheet.href)
+    if (stylesheet.href.substring(stylesheet.href.length-"style.css".length) === 'style.css') {
+        stylesheet.href = '/static/style-list-view.css';
+        // fileName = '/static/style.css';
+    }
+    else {
+        stylesheet.href = '/static/style.css';
+        // fileName = '/static/style-list-view.css';
+    }
+    // lastStyle = stylesheet.href
+    // cssFile.textContent = stylesheet.href
+});
+</script>
 </html>

@@ -1,0 +1,116 @@
+html, body {
+    min-height: 100vh;
+    color: #fff;
+    background:#fff;
+    font-family: 'Trebuchet MS';
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.top-bar {
+    color: #fc0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000;
+    padding: 10px 20px;
+    z-index: 1000;
+}
+
+.top-bar a {
+    font-size: 21px;
+    padding: 5px;
+    border-radius: 5px;
+    color: #000;
+    background-color: #fc0;
+    text-decoration: none;
+}
+
+.top-bar a:hover {
+    color: #900;
+}
+
+.options-container{
+    padding-top: 60px;
+    padding-bottom: 10px;
+    color: #000;
+    align-items: left;
+    gap: 20px;
+}
+
+.sort-options {
+    text-align: right;
+    padding-right: 5px;
+}
+
+.sort-order{
+    border-radius: 25%;
+    background-color: #ddd;
+    border: 0px;
+    cursor: pointer;
+}
+.sort-order:hover{
+    background-color: #aaa;
+}
+
+/*--------------------------------------------------------------------------------------*/
+/* Base container styling */
+.container {
+    display: flex;
+    flex-direction: column; /* Align cards vertically like a list */
+    gap: 1rem; /* Space between cards */
+    max-width: 600px; /* Limit width for better readability */
+    margin: 0 auto; /* Center align the container */
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+}
+
+/* Styling for each card */
+.card {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Image styling */
+.card-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+/* Text styling inside the card */
+.card div {
+    display: flex;
+    flex-direction: column;
+}
+
+.card p {
+    margin: 0;
+    color: #333;
+}
+
+/* Fallback message styling */
+h2 {
+    text-align: center;
+    color: #777;
+}
