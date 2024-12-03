@@ -29,8 +29,6 @@
     <button id="changeStyleButton">Change view</button>
     </div>
 
-
-    <!-- <h2>Groupie tracker</h2> -->
     <div class="container">
 
         {{range .Artists}}
@@ -52,48 +50,21 @@
     </footer>
 </body>
 <script>
-    // Get references to the button and the <link> element
 const button = document.getElementById('changeStyleButton');
 const stylesheet = document.getElementById('style');
-// const cssFile = document.getElementById('cssFile')
-// var lastStyle = ""
-// console.log("last style: "+lastStyle)
 
-// // Add a click event listener to the button
-
-// window.onload = function () {
-//     // if (stylesheet.href.substring(stylesheet.href.length-"style.css".length) === 'style.css') {
-//     //     fileName = '/static/style.css';
-//     // }
-//     // else {
-//     //     fileName = '/static/style-list-view.css';
-//     // }
-//     // cssFile.textContent = fileName
-
-//     if (stylesheet.href !== "") {
-//         stylesheet.href = lastStyle
-//         console.log("last style call: "+lastStyle)
-//     }
-// }
-
-// if (!stylesheet.href.includes(".css") ) {
-//     stylesheet.href = '/static/style.css';
-// }
-
+if (localStorage.getItem("cssFile") !== "")
+    stylesheet.href = localStorage.getItem("cssFile")
 
 button.addEventListener('click', () => {
-    // Change the href attribute of the <link> element to apply the new CSS file
-    // console.log("stylesheet:" + stylesheet.href)
     if (stylesheet.href.substring(stylesheet.href.length-"style.css".length) === 'style.css') {
-        stylesheet.href = '/static/style-list-view.css';
-        // fileName = '/static/style.css';
+        localStorage.setItem("cssFile", '/static/style-list-view.css')
     }
     else {
-        stylesheet.href = '/static/style.css';
-        // fileName = '/static/style-list-view.css';
+        localStorage.setItem("cssFile", '/static/style.css')
     }
-    // lastStyle = stylesheet.href
-    // cssFile.textContent = stylesheet.href
+    
+    stylesheet.href = localStorage.getItem("cssFile")
 });
 </script>
 </html>
