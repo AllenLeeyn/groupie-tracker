@@ -1,15 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
 // getArtistsData() gets the API data and makes them presentable
-func getArtistsData() errorPage {
+func getArtistsData() *errorPage {
 	err := getAPIData()
-	fmt.Println("err:", err)
-	if (err != errorPage{}) {
+	if err != nil {
 		return err
 	}
 	for i := 0; i < len(artistsLst); i++ {

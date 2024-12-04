@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"text/template"
+	"html/template"
 )
 
 const apiURL = "https://groupietrackers.herokuapp.com/api/"
@@ -29,17 +29,15 @@ func (e errorPage) Error() string {
 	return e.ErrorMsg
 }
 
-var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
-var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
-var errTmpl = template.Must(template.ParseFiles("templates/error.html"))
+var	indexTmpl, err1 = template.ParseFiles("templates/index.html")
+	
+var artistTmpl, artistTmplErr = template.ParseFiles("templates/artist.html")
+
+var	errTmpl, err2 = template.ParseFiles("templates/error.html")
+var ArtistErr *errorPage = nil
 
 func main() {
-	err := getArtistsData()
-	if (err != errorPage{}) {
-		http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-			errTmpl.Execute(w, err)
-		})
-	}
+	ArtistErr = getArtistsData()
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
 	http.HandleFunc("/", homeHandler)
 
