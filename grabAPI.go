@@ -104,9 +104,3 @@ func checkAPIData() {
 		}
 	}
 }
-
-func checkErr(err error) {
-	if err != nil {
-		log.Fatal("Error: " + err.Error())
-	}
-}
