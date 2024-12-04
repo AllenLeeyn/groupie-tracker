@@ -12,7 +12,7 @@ func getArtistsData() *errorPage {
 	}
 	for i := 0; i < len(artistsLst); i++ {
 		artistsLst[i].MembersCount = len(artistsLst[i].Members)
-		artistsLst[i].LocDate = getRelClean(rels.Lst[i].DatesLocations)
+		artistsLst[i].LocDate = getRelPretty(rels.Lst[i].DatesLocations)
 		artistsLst[i].LocCount = getLocCount(locs.Lst[i].Locations)
 		artistsLst[i].Performances = len(dates.Lst[i].Dates)
 	}
@@ -32,19 +32,15 @@ func getLocCount(locations []string) int {
 	return len(locLst)
 }
 
-// getRelClean() makes the key value in the original Relations List presentable
-func getRelClean(ogRelLst map[string][]string) map[string][]string {
+// getRelPretty() makes the key value in the original Relations List presentable
+func getRelPretty(ogRelLst map[string][]string) map[string][]string {
 	newRelLst := make(map[string][]string)
 
 	for key, value := range ogRelLst {
+
 		newKey := strings.ReplaceAll(key, "_", " ")
 		newKey = strings.ReplaceAll(newKey, "-", ", ")
-		newKey = func(words []string) string {
-			for i := 0; i < len(words); i++ {
-				words[i] = strings.ToUpper(words[i])
-			}
-			return strings.Join(words, " ")
-		}(strings.Split(newKey, " "))
+		newKey = strings.ToUpper(newKey)
 
 		newRelLst[newKey] = value
 	}

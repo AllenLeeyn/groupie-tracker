@@ -6,9 +6,8 @@ import (
 	"sort"
 )
 
-// getSortedArtists() checks for method error and sorts/filter artists
+// getSortedArtists() checks for method error and sorts artists
 func getSortedArtists(req *http.Request) error {
-	// var homePage *listPage
 	var newArtistsLst []artist = slices.Clone(artistsLst)
 
 	if err := req.ParseForm(); err != nil {
@@ -23,11 +22,10 @@ func getSortedArtists(req *http.Request) error {
 	return err
 }
 
-var	order = "▼"
+var order = "▼"
 
 func sortArtists(req *http.Request, arr []artist) (string, string, error) {
-	sortCriteria := "default"
-	sortLst(arr, sortCriteria)
+	var sortCriteria string
 
 	// POST method is used for sorting list.
 	// Invalid request is ignored and default setting is used.

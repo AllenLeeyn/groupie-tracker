@@ -20,6 +20,7 @@ type errorPage struct {
 func (e errorPage) Error() string {
 	return e.ErrorMsg
 }
+
 var (
 	NotFoundErr = errorPage{
 		ErrorCode: 404,
@@ -51,45 +52,43 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	if err1 != nil {
-		w.WriteHeader(InternalServerErr.ErrorCode)
-		errTmpl.Execute(w, InternalServerErr)
+		errorHandler(&w, InternalServerErr)
 		return
 	} else if ArtistErr != nil {
-		w.WriteHeader(InternalServerErr.ErrorCode)
-		errTmpl.Execute(w, *ArtistErr)
+		errorHandler(&w, InternalServerErr)
 		return
 	}
 
 	for index, artist := range artistsLst {
 		if req.URL.Path[1:] == artist.Name &&
 			req.Method == http.MethodGet {
-			artistHandler(w, index)
+			artistHandler(&w, index)
 			return
 		}
 	}
 	if req.URL.Path != "/" {
-		w.WriteHeader(404)
-		errTmpl.Execute(w, NotFoundErr)
+		errorHandler(&w, NotFoundErr)
 		return
 	}
 
-	err := getSortedArtists(req)
-
-	if err != nil {
+	if err := getSortedArtists(req); err != nil {
 		errPage := err.(errorPage) // type assertion
-		w.WriteHeader(errPage.ErrorCode)
-		errTmpl.Execute(w, errPage)
+		errorHandler(&w, errPage)
 		return
 	}
 	indexTmpl.Execute(w, homePage)
 }
 
 // artistHandler() generates the html response for an artist
-func artistHandler(w http.ResponseWriter, index int) {
+func artistHandler(w *http.ResponseWriter, index int) {
 	if artistTmplErr != nil {
-		w.WriteHeader(InternalServerErr.ErrorCode)
-		errTmpl.Execute(w, InternalServerErr)
+		errorHandler(w, InternalServerErr)
 		return
 	}
-	artistTmpl.Execute(w, struct{Artist artist}{Artist: artistsLst[index]})
+	artistTmpl.Execute(*w, struct{ Artist artist }{Artist: artistsLst[index]})
+}
+
+func errorHandler(w *http.ResponseWriter, err errorPage) {
+	(*w).WriteHeader(err.ErrorCode)
+	errTmpl.Execute(*w, err)
 }

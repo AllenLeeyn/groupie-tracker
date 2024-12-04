@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -57,9 +56,9 @@ func getAPIData() *errorPage {
 		if err != nil {
 			return &BadGatewayErr
 		}
-		defer apiResp.Body.Close()
 
 		apiRaw, err := io.ReadAll(apiResp.Body)
+		defer apiResp.Body.Close()
 		if err != nil {
 			return &BadGatewayErr
 		}
@@ -78,31 +77,5 @@ func getAPIData() *errorPage {
 			return &NotFoundErr
 		}
 	}
-	checkAPIData()
 	return nil
-}
-
-// checkAPIData() does simple check to see if the data matches
-func checkAPIData() {
-	artistsCount := len(artistsLst)
-	if len(locs.Lst) != artistsCount ||
-		len(dates.Lst) != artistsCount ||
-		len(rels.Lst) != artistsCount {
-		log.Fatal("ERROR: Entry count does not tally")
-	}
-
-	for i := range artistsCount {
-		locCount, datesCount := len(rels.Lst[i].DatesLocations), 0
-		for _, dates := range rels.Lst[i].DatesLocations {
-			datesCount += len(dates)
-		}
-
-		if locCount != len(locs.Lst[i].Locations) ||
-			datesCount != len(dates.Lst[i].Dates) {
-			log.Printf("ERROR: Entry [%v] does not tally\n", i)
-			log.Printf("relations %v v locations %v\n", locCount, len(locs.Lst[i].Locations))
-			log.Printf("relations %v v dates %v\n", datesCount, len(dates.Lst[i].Dates))
-			log.Println("=========================================")
-		}
-	}
 }
