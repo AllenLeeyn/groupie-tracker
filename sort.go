@@ -7,14 +7,14 @@ import (
 )
 
 // getSortedArtists() checks for method error and sorts/filter artists
-func getSortedArtists(w http.ResponseWriter, req *http.Request) error {
+func getSortedArtists(req *http.Request) error {
 	// var homePage *listPage
 	var newArtistsLst []artist = slices.Clone(artistsLst)
 
 	if err := req.ParseForm(); err != nil {
 		return BadRequestErr
 	}
-	order, sortCriteria, err := sortArtists(w, req, newArtistsLst)
+	order, sortCriteria, err := sortArtists(req, newArtistsLst)
 	homePage = &listPage{
 		Artists: newArtistsLst,
 		Order:   order,
@@ -23,8 +23,9 @@ func getSortedArtists(w http.ResponseWriter, req *http.Request) error {
 	return err
 }
 
-func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string, string, error) {
-	order := "▼"
+var	order = "▼"
+
+func sortArtists(req *http.Request, arr []artist) (string, string, error) {
 	sortCriteria := "default"
 	sortLst(arr, sortCriteria)
 
@@ -40,11 +41,8 @@ func sortArtists(w http.ResponseWriter, req *http.Request, arr []artist) (string
 		if pageOrder == "▼" {
 			order = "▲"
 			revLst(arr)
-		} else if pageOrder == "▲" {
-			order = "▼"
 		}
 	} else if req.Method != http.MethodGet {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 		return "", "", MethodNotAllowedErr
 	}
 	return order, sortCriteria, nil

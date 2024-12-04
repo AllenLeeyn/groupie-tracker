@@ -57,7 +57,7 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err := getSortedArtists(w, req)
+	err := getSortedArtists(req)
 
 	if err != nil {
 		errPage := err.(errorPage) // type assertion
