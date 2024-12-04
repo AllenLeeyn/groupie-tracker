@@ -4,6 +4,22 @@ import (
 	"net/http"
 )
 
+type listPage struct {
+	Artists []artist
+	SortBy  string
+	Order   string
+}
+
+var homePage *listPage = &listPage{}
+
+type errorPage struct {
+	ErrorCode int
+	ErrorMsg  string
+}
+
+func (e errorPage) Error() string {
+	return e.ErrorMsg
+}
 var (
 	NotFoundErr = errorPage{
 		ErrorCode: 404,
@@ -75,6 +91,5 @@ func artistHandler(w http.ResponseWriter, index int) {
 		errTmpl.Execute(w, InternalServerErr)
 		return
 	}
-	artPage := &artistPage{Artist: artistsLst[index]}
-	artistTmpl.Execute(w, artPage)
+	artistTmpl.Execute(w, struct{Artist artist}{Artist: artistsLst[index]})
 }

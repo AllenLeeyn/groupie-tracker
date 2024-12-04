@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+const apiURL = "https://groupietrackers.herokuapp.com/api/"
+
 type artist struct {
 	Id           int      `json:"id"`
 	Image        string   `json:"image"`
