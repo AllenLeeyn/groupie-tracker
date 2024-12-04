@@ -21,19 +21,25 @@ type artistPage struct {
 }
 
 type errorPage struct {
-	errorCode int
-	errorMsg  string
+	ErrorCode int
+	ErrorMsg  string
 }
 
 func (e errorPage) Error() string {
-	return e.errorMsg
+	return e.ErrorMsg
 }
 
 var indexTmpl = template.Must(template.ParseFiles("templates/index.html"))
 var artistTmpl = template.Must(template.ParseFiles("templates/artist.html"))
+var errTmpl = template.Must(template.ParseFiles("templates/error.html"))
 
 func main() {
-	getArtistsData()
+	err := getArtistsData()
+	if (err != errorPage{}) {
+		http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+			errTmpl.Execute(w, err)
+		})
+	}
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
 	http.HandleFunc("/", homeHandler)
 

@@ -1,18 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
 // getArtistsData() gets the API data and makes them presentable
-func getArtistsData() {
-	getAPIData()
+func getArtistsData() errorPage {
+	err := getAPIData()
+	fmt.Println("err:", err)
+	if (err != errorPage{}) {
+		return err
+	}
 	for i := 0; i < len(artistsLst); i++ {
 		artistsLst[i].MembersCount = len(artistsLst[i].Members)
 		artistsLst[i].LocDate = getRelClean(rels.Lst[i].DatesLocations)
 		artistsLst[i].LocCount = getLocCount(locs.Lst[i].Locations)
 		artistsLst[i].Performances = len(dates.Lst[i].Dates)
 	}
+	return err
 }
 
 // getLocCount() uses locLst to count

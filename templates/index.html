@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
     <title>Groupie-tracker</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" id="style" href="/static/style.css">
 </head>
 <body>
     <header class="top-bar">
@@ -24,7 +24,9 @@
             <button name="switch-order" id="switch-order" class="sort-order" type="submit" value={{.Order}}>
                 {{.Order}}
             </button>
+            <input id="cssFile" type="text" name="cssFile" style="display: none;">
         </form>
+    <button id="changeStyleButton">Change view</button>
     </div>
 
     <div class="container">
@@ -48,4 +50,22 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
+<script>
+const button = document.getElementById('changeStyleButton');
+const stylesheet = document.getElementById('style');
+
+if (localStorage.getItem("cssFile") !== null)
+    stylesheet.href = localStorage.getItem("cssFile")
+
+button.addEventListener('click', () => {
+    if (stylesheet.href.substring(stylesheet.href.length-"style.css".length) === 'style.css') {
+        localStorage.setItem("cssFile", '/static/style-list-view.css')
+    }
+    else {
+        localStorage.setItem("cssFile", '/static/style.css')
+    }
+    
+    stylesheet.href = localStorage.getItem("cssFile")
+});
+</script>
 </html>

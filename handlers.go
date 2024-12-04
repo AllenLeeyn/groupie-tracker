@@ -7,6 +7,29 @@ import (
 	"sort"
 )
 
+var (
+	NotFoundErr = errorPage{
+		ErrorCode: 404,
+		ErrorMsg:  "Oops! The page you're looking for doesn't exist.",
+	}
+	InternalServerErr = errorPage{
+		ErrorCode: 500,
+		ErrorMsg:  "Internal Server Error",
+	}
+	BadRequestErr = errorPage{
+		ErrorCode: 400,
+		ErrorMsg:  "Bad Request",
+	}
+	MethodNotAllowedErr = errorPage{
+		ErrorCode: http.StatusMethodNotAllowed,
+		ErrorMsg:  "Method Not Allowed",
+	}
+	BadGatewayErr = errorPage{
+		ErrorCode: http.StatusBadGateway,
+		ErrorMsg:  "Bad Gateway",
+	}
+)
+
 // homeHandler() handles all request and url.
 // passes '/artistName' to artistHandler().
 func homeHandler(w http.ResponseWriter, req *http.Request) {
@@ -19,14 +42,18 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 	if req.URL.Path != "/" {
-		http.Error(w, "404 not found", http.StatusNotFound)
+		w.WriteHeader(404)
+		errTmpl.Execute(w, NotFoundErr)
+
 		return
 	}
 
 	err := getSortedArtists(w, req)
+
 	if err != nil {
 		errPage := err.(errorPage) // type assertion
-		http.Error(w, errPage.errorMsg, errPage.errorCode)
+		w.WriteHeader(errPage.ErrorCode)
+		errTmpl.Execute(w, errPage)
 		return
 	}
 	indexTmpl.Execute(w, homePage)
