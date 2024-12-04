@@ -1,9 +1,9 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
-	"html/template"
 )
 
 const apiURL = "https://groupietrackers.herokuapp.com/api/"
@@ -29,9 +29,9 @@ func (e errorPage) Error() string {
 	return e.ErrorMsg
 }
 
-var	indexTmpl, err1 = template.ParseFiles("templates/index.html")
+var indexTmpl, err1 = template.ParseFiles("templates/index.html")
 var artistTmpl, artistTmplErr = template.ParseFiles("templates/artist.html")
-var	errTmpl, err2 = template.ParseFiles("templates/error.html")
+var errTmpl, err2 = template.ParseFiles("templates/error.html")
 var ArtistErr *errorPage = nil
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
 	http.HandleFunc("/", homeHandler)
 
-	port := "localhost:8081"
-	log.Println("Listening on http://" + port)
+	port := ":8081"
+	log.Println("Listening on http://localhost" + port)
 	http.ListenAndServe(port, nil)
 }
