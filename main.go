@@ -15,7 +15,7 @@ func main() {
 	http.Handle("/static/", http.FileServer(http.Dir("assets/")))
 	http.HandleFunc("/", homeHandler)
 
-	port := ":8081"
-	log.Println("Listening on http://localhost" + port)
-	http.ListenAndServe(port, nil)
+	port := "10000"
+	log.Println("Listening on http://localhost:" + port)
+	http.ListenAndServe(":"+port, nil)
 }
