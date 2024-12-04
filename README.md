@@ -79,14 +79,21 @@ flowchart TD
     not GET or POST method"|error
 
 ```
+1. When the program is starts running, 
+	- it grabs the templates and artistData `getArtistsData()`
+	- it registers the `/` amd `/static/` as valid URLs
+	- it listens to the assigned port for requests.
+2. All request (other than `/static/`) will be pass to `homeHandler` function.
+    - if `GET /`, response with homepage (indexTmpl)
+3. From the homepage, users can:
+    - change sorting options. Generates a `POST` request
+    - click on an artist's thumbnail. Generates a `GET /artist`
+4. `POST sorting options` are handled by `getSortedArtists()`
+5. `GET /artist` are handled by `artistHandler` (artistTmpl)
+6. When an error is encounterd, errTmpl is used to generate the html response
 
-## Tasks
-- list view (Anass)
-- error pages/ handling (Anass)
 
-## Bonus
-- event run asynchronous
-- host/deploy site
+Deployed server/site using Render
 
 ## optionals
 - filters (BACK-END 30%.required to start FORUM)
@@ -102,3 +109,4 @@ flowchart TD
 - a range filter
 - a checkbox filter
 - we can implement this early and use it to fulfill the requirement of using all four sets of data
+
