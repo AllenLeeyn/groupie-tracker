@@ -35,8 +35,11 @@ func sortArtists(req *http.Request, arr []artist) (string, string, error) {
 			sortCriteria = "default"
 		}
 		sortLst(arr, sortCriteria)
+
 		pageOrder := req.FormValue("switch-order")
-		if pageOrder == "▼" {
+		if pageOrder == "▲" {
+			order = "▼"
+		} else if pageOrder == "▼" || order == "▲" {
 			order = "▲"
 			revLst(arr)
 		}
