@@ -47,22 +47,15 @@ var (
 // homeHandler() handles all request and url.
 // passes '/artistName' to artistHandler().
 func homeHandler(w http.ResponseWriter, req *http.Request) {
-	if err2 != nil {
-		http.Error(w, "500 Internal Server Error", 500)
-		return
-	}
-	if err1 != nil {
-		errorHandler(&w, InternalServerErr)
-		return
-	} else if ArtistErr != nil {
+	if ArtistErr != nil {
 		errorHandler(&w, InternalServerErr)
 		return
 	}
 
-	for index, artist := range artistsLst {
-		if req.URL.Path[1:] == artist.Name &&
+	for index, artistEntry := range artistsLst {
+		if req.URL.Path[1:] == artistEntry.Name &&
 			req.Method == http.MethodGet {
-			artistHandler(&w, index)
+			artistTmpl.Execute(w, struct{ Artist artist }{Artist: artistsLst[index]})
 			return
 		}
 	}
@@ -77,15 +70,6 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	indexTmpl.Execute(w, homePage)
-}
-
-// artistHandler() generates the html response for an artist
-func artistHandler(w *http.ResponseWriter, index int) {
-	if artistTmplErr != nil {
-		errorHandler(w, InternalServerErr)
-		return
-	}
-	artistTmpl.Execute(*w, struct{ Artist artist }{Artist: artistsLst[index]})
 }
 
 func errorHandler(w *http.ResponseWriter, err errorPage) {
