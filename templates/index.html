@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
     <title>Groupie-tracker</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" id="style" href="/static/style-card-view.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" id="style" href="/static/css/style-card-view.css">
 </head>
 <body>
     <header class="top-bar">
@@ -60,10 +60,10 @@ if (localStorage.getItem("cssFile") !== null)
 
 button.addEventListener('click', () => {
     if (stylesheet.href.substring(stylesheet.href.length-"style-card-view.css".length) === 'style-card-view.css') {
-        localStorage.setItem("cssFile", '/static/style-list-view.css')
+        localStorage.setItem("cssFile", '/static/css/style-list-view.css')
     }
     else {
-        localStorage.setItem("cssFile", '/static/style-card-view.css')
+        localStorage.setItem("cssFile", '/static/css/style-card-view.css')
     }
     
     stylesheet.href = localStorage.getItem("cssFile")

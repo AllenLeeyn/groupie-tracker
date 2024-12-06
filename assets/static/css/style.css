@@ -39,6 +39,10 @@ html, body {
     color: yellow;
 }
 
+.top-bar:active{
+    background-color: red;
+}
+
 .options-container {
     margin-top: 50px;
     background-color: white;
@@ -182,6 +186,9 @@ footer a:hover {
     color: yellow;
 }
 
+footer:active{
+    background-color: red;
+}
 .container  {
     color: #000;
 }
