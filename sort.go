@@ -2,23 +2,21 @@ package main
 
 import (
 	"net/http"
-	"slices"
 	"sort"
 )
 
 // getSortedArtists() checks for method error and sorts artists
 func getSortedArtists(req *http.Request) error {
-	var newArtistsLst []artist = slices.Clone(artistsLst)
+	// var newArtistsLst []artist = slices.Clone(artistsLst)
 
-	if err := req.ParseForm(); err != nil {
-		return BadRequestErr
-	}
-	order, sortCriteria, err := sortArtists(req, newArtistsLst)
-	homePage = &listPage{
-		Artists: newArtistsLst,
-		Order:   order,
-		SortBy:  sortCriteria,
-	}
+	order, sortCriteria, err := sortArtists(req, homePage.Artists)
+	// homePage = &listPage{
+	// 	// Artists: newArtistsLst,
+	// 	Order:   order,
+	// 	SortBy:  sortCriteria,
+	// }
+	homePage.Order = order
+	homePage.SortBy = sortCriteria
 	return err
 }
 
