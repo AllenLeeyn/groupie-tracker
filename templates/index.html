@@ -8,6 +8,7 @@
     <title>Groupie-tracker</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" id="style" href="/static/css/style-card-view.css">
+    <link rel="stylesheet" href="/static/css/style-filter-form.css">
 </head>
 <body>
     <header class="top-bar">
@@ -32,7 +33,7 @@
 
     <div class="container">
 
-        <form action="/" method="post">
+        <form class="fixed-form" action="/" method="post">
             <legend>Members number:</legend>
             <input type="checkbox" id="1" name="members number" value="1" {{ range .Filters.NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
             <label for="1">1</label>

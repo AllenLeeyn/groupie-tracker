@@ -1,0 +1,83 @@
+.fixed-form {
+  position: fixed;
+  top: 110px;
+  left: 5px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 410px;
+  font-family: Arial, sans-serif;
+  color: #000;
+  z-index: 1000;
+}
+
+.fixed-form legend {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #622;
+}
+
+.fixed-form input[type="checkbox"] {
+  margin-right: 0.5rem;
+  accent-color: #622;
+}
+
+.fixed-form label {
+  margin-right: 1rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.fixed-form input[type="text"],
+.fixed-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  color: #333;
+}
+
+.fixed-form textarea {
+  resize: vertical;
+}
+
+.fixed-form input[type="submit"] {
+  background-color: #622;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.fixed-form input[type="submit"]:hover {
+  background-color: #444;
+  transform: scale(1.05);
+}
+
+.fixed-form input[type="submit"]:active {
+  background-color: #333;
+}
+
+.fixed-form .slidecontainer {
+  margin: 1rem 0;
+}
+
+.fixed-form input[type="range"] {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.fixed-form #range-current-value {
+  font-size: 0.9rem;
+  color: #666;
+}
