@@ -51,3 +51,7 @@
     padding: 0px;
     margin: 0px;
 }
+
+.card p:nth-child(3), .card p:nth-child(4){
+    display: block;
+}

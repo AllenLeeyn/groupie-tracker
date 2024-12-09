@@ -7,33 +7,40 @@
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
     <title>Groupie-tracker</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" id="style" href="/static/css/style-card-view.css">
     <link rel="stylesheet" href="/static/css/style-filter-form.css">
+    <link rel="stylesheet" id="style" href="/static/css/style-card-view.css">
 </head>
 <body>
     <header class="top-bar">
         <a href="/">groupie-tracker</a>
     </header>
 
-    <div class="options-container">
-        <form class="sort-options" action="/" method="post">
-            <label for="sort">Sort by:</label>
-            <select name="sort" id="sort" onchange="this.form.submit()">
-                <option value="default" {{if eq .SortBy "default"}}selected{{end}}>default</option>
-                <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
-                <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
-            </select>
-            <button name="switch-order" id="switch-order" class="sort-order" type="submit" value={{.Order}}>
-                {{.Order}}
-            </button>
-            <input id="cssFile" type="text" name="cssFile" style="display: none;">
-        </form>
-    <button id="changeStyleButton">Change view</button>
-    </div>
+    <form action="/" method="post">
+        <input id="toggle" type="checkbox" style="display: none;">
+        
+        <div class="options-container">
+            <div>
+                <label class="sort-order show" for="toggle">Show Filters</label>
+                <label class="sort-order hide" for="toggle">Hide Filters</label>
+            </div>
+            <div class="sort-options" >
+                <label for="sort">Sort by:</label>
+                <select name="sort" id="sort" onchange="this.form.submit()">
+                    <option value="default" {{if eq .SortBy "default"}}selected{{end}}>default</option>
+                    <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
+                    <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
+                    <option value="membersCount" {{if eq .SortBy "membersCount"}}selected{{end}}>No of Members</option>
+                    <option value="firstAlbum" {{if eq .SortBy "firstAlbum"}}selected{{end}}>First Albun</option>
+                </select>
+                <button name="switch-order" id="switch-order" class="sort-order" type="submit" value={{.Order}}>
+                    {{.Order}}
+                </button>
+                <input id="cssFile" type="text" name="cssFile" style="display: none;">
+                <button id="changeStyleButton">Change view</button>
+            </div>
+        </div>
 
-    <div class="container">
-
-        <form class="fixed-form" action="/" method="post">
+        <div class="fixed-form hide">
             <legend>Members number:</legend>
             <input type="checkbox" id="1" name="members number" value="1" {{ range .Filters.NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
             <label for="1">1</label>
@@ -64,16 +71,23 @@
                 <div id="range-current-value"></div>
             </div>
             {{end}}
+            <button type="submit" class="sort-order">Apply</button>
+        </div>
+    </form>
 
-            <input type="submit" value="Filter" name="submit button">
-        </form>
+
+    <div class="container">
 
         {{range .Artists}}
         <a class="card" href="/{{.Name}}">
             <img class="card-img" src={{.Image}} alt={{.Name}} >
             <div>
                 <p>{{.Name}}</p>
-                <p>Started {{.CreationDate}}<br><br></p>
+                <p>Started {{.CreationDate}}</p>
+                {{if gt .MembersCount 1}}
+                <p>{{.MembersCount}} members</p>
+                {{end}}
+                <p>First Album: {{.FirstAlbum}}</p>
             </div>
         </a>
         {{ else }}
@@ -87,12 +101,12 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
+
 <script>
 const button = document.getElementById('changeStyleButton');
 const stylesheet = document.getElementById('style');
 
-if (localStorage.getItem("cssFile") !== null)
-    stylesheet.href = localStorage.getItem("cssFile")
+(localStorage.getItem("cssFile") !== null)? stylesheet.href = localStorage.getItem("cssFile"): null;
 
 button.addEventListener('click', () => {
     if (stylesheet.href.substring(stylesheet.href.length-"style-card-view.css".length) === 'style-card-view.css') {
@@ -115,5 +129,20 @@ var slider = document.getElementById("myRange")
     slider.oninput = function() {
         output.innerHTML = this.value;
     }
+
+/*------------------------------------------------------------------------------------------------*/
+
+const filterVisibility = document.getElementById('toggle');
+(localStorage.getItem("filterToggle") === "true")? filterVisibility.checked = true: filterVisibility.checked = false;
+
+filterVisibility.addEventListener('change', () => {
+    if (filterVisibility.checked){
+        localStorage.setItem("filterToggle", "true");
+        filterVisibility.checked = true;
+    }  else {
+        localStorage.setItem("filterToggle", "false");
+        filterVisibility.checked = false;
+    }
+});
 </script>
 </html>

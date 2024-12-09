@@ -43,7 +43,7 @@ html, body {
     background-color: red;
 }
 
-.options-container {
+.options-container, .filter-container {
     margin-top: 50px;
     background-color: white;
     padding: 10px;
@@ -51,7 +51,7 @@ html, body {
     align-items: center;
     gap: 10px;
     border-bottom: 2px solid black;
-    justify-content: right;
+    justify-content: space-between;
 }
 
 .sort-options {
@@ -88,6 +88,14 @@ html, body {
     color: yellow;
     transition: background-color 0.3s ease, color 0.3s ease;
 } 
+
+.show, #toggle:checked ~ div .hide, #toggle:checked ~ .hide{
+    display: block;
+}
+
+.hide, #toggle:checked ~ div .show, #toggle:checked ~ .show{
+    display: none;
+}
 
 #changeStyleButton {
     /* background-color: yellow; */
@@ -194,6 +202,9 @@ footer:active{
 }
 
 @media (max-width: 480px) {
+    .options-container{
+        flex-direction: column;
+    }
     .data-row{
         display: flex;
         flex: 1;
