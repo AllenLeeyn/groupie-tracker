@@ -23,7 +23,6 @@ func mainFilter(req *http.Request) error {
 	filtrs.Locations = checkGetLocations(req.Form["locations"])
 	rangeValue := req.Form["range"]
 	applyRange := req.Form["applyRange"]
-	fmt.Println("range value:", rangeValue)
 	if (len(req.Form["submit button"]) == 1 && req.Method != "POST") ||
 		((len(req.Form["submit button"]) == 0 && len(req.Form["sort"]) == 0 && len(req.Form["switch-order"]) == 0) && req.Method != "GET") {
 		// return errorPage{405, "405 method not allowed"}
@@ -77,7 +76,7 @@ func checkGetLocations(locationsArr []string) []string {
 	if len(locationsArr) == 0 {
 		return []string{}
 	}
-	return strings.Fields(locationsArr[0])
+	return strings.Split(locationsArr[0], "\n")
 }
 
 func checkMembersNb(artist artist, membersNb string) bool {
@@ -87,7 +86,7 @@ func checkMembersNb(artist artist, membersNb string) bool {
 
 func compareLoc(artist artist, loc string) bool {
 	for artistLoc := range artist.LocDate {
-		if strings.Contains(artistLoc, loc) {
+		if artistLoc == loc {
 			return true
 		}
 	}

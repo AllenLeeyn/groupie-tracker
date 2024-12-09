@@ -40,9 +40,26 @@ func getRelPretty(ogRelLst map[string][]string) map[string][]string {
 
 		newKey := strings.ReplaceAll(key, "_", " ")
 		newKey = strings.ReplaceAll(newKey, "-", ", ")
-		newKey = strings.ToUpper(newKey)
 
+		loc := strings.Split(newKey, ",")
+		loc[0] = cap(loc[0])
+		if loc[1] == " usa" || loc[1] == " uk" {
+			loc[1] = strings.ToUpper(loc[1])
+		} else {
+			loc[1] = cap(loc[1])
+			loc[1] = " " + loc[1] // because cap() implicitly trims the space at the start of loc[1]
+		}
+
+		newKey = strings.Join(loc, ",")
 		newRelLst[newKey] = value
 	}
 	return newRelLst
+}
+
+func cap(s string) string {
+	strs := strings.Fields(s)
+	for i := range strs {
+		strs[i] = strings.ToUpper(string(strs[i][0])) + strings.ToLower(strs[i][1:])
+	}
+	return strings.Join(strs, " ")
 }

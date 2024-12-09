@@ -61,7 +61,7 @@
             <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />
 
             <legend>location(s) of concerts</legend>
-            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}} {{ end }}</textarea><br><br>
+            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea><br><br>
             {{if .Artists}}
             <div class="slidecontainer">
                 <input type="range" name="range" min="{{ .Filters.EarliestDt }}" max="{{.Filters.LatestDt}}" value="{{.Filters.EarliestDt}}" class="slider" id="myRange">
