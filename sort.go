@@ -29,7 +29,10 @@ func sortArtists(req *http.Request, arr []artist) (string, string, error) {
 	// Invalid request is ignored and default setting is used.
 	if req.Method == http.MethodPost {
 		sortCriteria = req.FormValue("sort")
-		if sortCriteria != "creation_date" && sortCriteria != "name" {
+		if sortCriteria != "creation_date" &&
+			sortCriteria != "name" &&
+			sortCriteria != "membersCount" &&
+			sortCriteria != "firstAlbum" {
 			sortCriteria = "default"
 		}
 		sortLst(arr, sortCriteria)
@@ -55,6 +58,10 @@ func sortLst(arr []artist, sortCriteria string) {
 			return arr[i].Name < arr[j].Name
 		case "creation_date":
 			return arr[i].CreationDate < arr[j].CreationDate
+		case "membersCount":
+			return arr[i].MembersCount < arr[j].MembersCount
+		case "firstAlbum":
+			return arr[i].FirstAlbum[6:] < arr[j].FirstAlbum[6:]
 		}
 		return arr[i].Id < arr[j].Id
 	})
