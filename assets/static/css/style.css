@@ -75,6 +75,7 @@ html, body {
 .sort-order {
     /* background-color: yellow; */
     color: black;
+    background-color: #eee;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;

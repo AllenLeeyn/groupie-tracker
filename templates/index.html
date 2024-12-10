@@ -19,10 +19,6 @@
     <div>
         <input id="toggle" type="checkbox" style="display: none;">
         <div class="options-container">
-            <div>
-                <label class="sort-order show" for="toggle">Show Filters</label>
-                <label class="sort-order hide" for="toggle">Hide Filters</label>
-            </div>
             <div class="sort-options" >
                 <label for="sort">Sort by:</label>
                 <select name="sort" id="sort">
@@ -35,6 +31,10 @@
                 <button name="switch-order" id="switch-order" class="sort-order" onclick="revCards()">▼</button>
                 <input id="cssFile" type="text" name="cssFile" style="display: none;">
                 <button id="changeStyleButton">Change view</button>
+            </div>
+            <div>
+                <label class="sort-order show" for="toggle">Show Filters</label>
+                <label class="sort-order hide" for="toggle">Hide Filters</label>
             </div>
         </div>
 
@@ -60,10 +60,11 @@
             <legend>Date of first album:</legend>
             <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />
 
-            <legend>location(s) of concerts</legend>
-            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea><br><br>
+            <legend>location(s) of concerts:</legend>
+            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea>
             {{if .Artists}}
             <div class="slidecontainer">
+                <legend>Date of Creation:</legend>
                 <input type="range" name="range" min="{{ .Filters.EarliestDt }}" max="{{.Filters.LatestDt}}" value="{{.Filters.EarliestDt}}" class="slider" id="myRange">
                 <label for="myRange">apply range value
                     <input type="checkbox" name="applyRange" {{if eq .Filters.ApplyRange "on" }} checked {{end}}>
