@@ -55,7 +55,9 @@
             <input type="checkbox" id="6" name="members number" value="6" {{ range .Filters.NbChecked }} {{if eq . "6" }} checked="checked" {{end}} {{ end }}>
             <label for="6">6</label>
             <input type="checkbox" id="7" name="members number" value="7" {{ range .Filters.NbChecked }} {{if eq . "7" }} checked="checked" {{end}} {{ end }}>
-            <label for="7">7</label><br>
+            <label for="7">7</label>
+            <input type="checkbox" id="8" name="members number" value="8" {{ range .Filters.NbChecked }} {{if eq . "8" }} checked="checked" {{end}} {{ end }}>
+            <label for="8">8</label><br>
 
             <legend>Date of first album:</legend>
             <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />

@@ -73,7 +73,7 @@ func checkGetFADate(dateArr []string) string {
 }
 
 func checkGetLocations(locationsArr []string) []string {
-	if len(locationsArr) == 0 {
+	if len(locationsArr) == 0 || (len(locationsArr) == 1 && locationsArr[0] == "") {
 		return []string{}
 	}
 	return strings.Split(locationsArr[0], "\n")
