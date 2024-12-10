@@ -9,15 +9,15 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/style-filter-form.css">
     <link rel="stylesheet" id="style" href="/static/css/style-card-view.css">
+    <script src="/static/script.js" defer></script>
 </head>
 <body>
     <header class="top-bar">
         <a href="/">groupie-tracker</a>
     </header>
 
-    <form action="/" method="post">
+    <div>
         <input id="toggle" type="checkbox" style="display: none;">
-        
         <div class="options-container">
             <div>
                 <label class="sort-order show" for="toggle">Show Filters</label>
@@ -25,22 +25,20 @@
             </div>
             <div class="sort-options" >
                 <label for="sort">Sort by:</label>
-                <select name="sort" id="sort" onchange="this.form.submit()">
+                <select name="sort" id="sort">
                     <option value="default" {{if eq .SortBy "default"}}selected{{end}}>default</option>
                     <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
                     <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
                     <option value="membersCount" {{if eq .SortBy "membersCount"}}selected{{end}}>No of Members</option>
                     <option value="firstAlbum" {{if eq .SortBy "firstAlbum"}}selected{{end}}>First Albun</option>
                 </select>
-                <button name="switch-order" id="switch-order" class="sort-order" type="submit" value={{.Order}}>
-                    {{.Order}}
-                </button>
+                <button name="switch-order" id="switch-order" class="sort-order" onclick="revCards()">▼</button>
                 <input id="cssFile" type="text" name="cssFile" style="display: none;">
                 <button id="changeStyleButton">Change view</button>
             </div>
         </div>
 
-        <div class="fixed-form hide">
+        <form action="/" method="post" class="fixed-form hide">
             <legend>Members number:</legend>
             <input type="checkbox" id="1" name="members number" value="1" {{ range .Filters.NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
             <label for="1">1</label>
@@ -74,8 +72,8 @@
             </div>
             {{end}}
             <button type="submit" class="sort-order">Apply</button>
-        </div>
-    </form>
+        </form>
+    </div>
 
 
     <div class="container">
@@ -88,6 +86,8 @@
                 <p>Started {{.CreationDate}}</p>
                 {{if gt .MembersCount 1}}
                 <p>{{.MembersCount}} members</p>
+                {{else}}
+                <p style="display: none;">{{.MembersCount}} members</p>
                 {{end}}
                 <p>First Album: {{.FirstAlbum}}</p>
             </div>
@@ -103,48 +103,4 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
-
-<script>
-const button = document.getElementById('changeStyleButton');
-const stylesheet = document.getElementById('style');
-
-(localStorage.getItem("cssFile") !== null)? stylesheet.href = localStorage.getItem("cssFile"): null;
-
-button.addEventListener('click', () => {
-    if (stylesheet.href.substring(stylesheet.href.length-"style-card-view.css".length) === 'style-card-view.css') {
-        localStorage.setItem("cssFile", '/static/css/style-list-view.css')
-    }
-    else {
-        localStorage.setItem("cssFile", '/static/css/style-card-view.css')
-    }
-    
-    stylesheet.href = localStorage.getItem("cssFile")
-});
-
-/*------------------------------------------------------------------------------------------------*/
-
-var slider = document.getElementById("myRange")
-    var output = document.getElementById("range-current-value");
-    output.innerHTML = slider.value; // Display the default slider value
-
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function() {
-        output.innerHTML = this.value;
-    }
-
-/*------------------------------------------------------------------------------------------------*/
-
-const filterVisibility = document.getElementById('toggle');
-(localStorage.getItem("filterToggle") === "true")? filterVisibility.checked = true: filterVisibility.checked = false;
-
-filterVisibility.addEventListener('change', () => {
-    if (filterVisibility.checked){
-        localStorage.setItem("filterToggle", "true");
-        filterVisibility.checked = true;
-    }  else {
-        localStorage.setItem("filterToggle", "false");
-        filterVisibility.checked = false;
-    }
-});
-</script>
 </html>

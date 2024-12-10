@@ -79,11 +79,6 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 		errorHandler(&w, errPage)
 		return
 	}
-	if err := getSortedArtists(req); err != nil {
-		errPage := err.(errorPage) // type assertion
-		errorHandler(&w, errPage)
-		return
-	}
 	indexTmpl.Execute(w, homePage)
 }
 
