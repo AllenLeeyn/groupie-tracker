@@ -15,8 +15,6 @@ type filters struct {
 
 type listPage struct {
 	Artists []artist
-	SortBy  string
-	Order   string
 	Filters filters
 }
 

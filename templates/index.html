@@ -22,11 +22,11 @@
             <div class="sort-options" >
                 <label for="sort">Sort by:</label>
                 <select name="sort" id="sort">
-                    <option value="default" {{if eq .SortBy "default"}}selected{{end}}>default</option>
-                    <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
-                    <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
-                    <option value="membersCount" {{if eq .SortBy "membersCount"}}selected{{end}}>No of Members</option>
-                    <option value="firstAlbum" {{if eq .SortBy "firstAlbum"}}selected{{end}}>First Albun</option>
+                    <option value="default" selected>default</option>
+                    <option value="name">Name</option>
+                    <option value="creation_date">Creation Date</option>
+                    <option value="membersCount">No of Members</option>
+                    <option value="firstAlbum">First Albun</option>
                 </select>
                 <button name="switch-order" id="switch-order" class="sort-order" onclick="revCards()">▼</button>
                 <input id="cssFile" type="text" name="cssFile" style="display: none;">

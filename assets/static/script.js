@@ -44,6 +44,8 @@ filterVisibility.addEventListener('change', () => {
 
 document.addEventListener("DOMContentLoaded", () =>{
     const sort = document.getElementById("sort");
+    (localStorage.getItem("sortBy") !== null)? sort.value=localStorage.getItem("sortBy"): null;
+
     const container = document.querySelector(".container");
     const cards = Array.from(container.getElementsByClassName("card"));
 
@@ -74,32 +76,53 @@ document.addEventListener("DOMContentLoaded", () =>{
         let sortedCards;
         if (sortCriteria === "creation_date") {
             sortedCards = [...cards].sort(compareDate);
+            localStorage.setItem("sortBy", "creation_date");
         } else if (sortCriteria === "name") {
             sortedCards = [...cards].sort(compareName);
+            localStorage.setItem("sortBy", "name");
         } else if (sortCriteria === "membersCount") {
             sortedCards = [...cards].sort(compareMembersCnt);
+            localStorage.setItem("sortBy", "membersCount");
         } else if (sortCriteria === "firstAlbum") {
             sortedCards = [...cards].sort(compareFirstAlbum);
+            localStorage.setItem("sortBy", "firstAlbum");
         } else {
             sortedCards = cards; // Default order (no sorting)
+            localStorage.setItem("sortBy", "default");
         }
         // Clear the container and append sorted cards
         container.innerHTML = '';
         sortedCards.forEach(card => container.appendChild(card));
     }
+
+    sortCards();
+    let sortedCards = Array.from(container.getElementsByClassName("card"));
+
+    const switchOrder = document.getElementById("switch-order");
+    (localStorage.getItem("order") !== null)? switchOrder.textContent=localStorage.getItem("order"): null;
+
+    if (switchOrder.textContent === "▲") {
+        sortedCards.reverse();
+    }
+    container.innerHTML = '';
+    sortedCards.forEach(card => container.appendChild(card));
+
     // Attach the event listener to the dropdown
     sort.addEventListener("change", sortCards);
 })
 
+/*------------------------------------------------------------------------------------------------*/
+
 function revCards(){
     const container = document.querySelector(".container");
+    
     let cards = Array.from(container.getElementsByClassName("card"));
     cards.reverse();
     container.innerHTML = '';
     cards.forEach(card => container.appendChild(card));
+    
     const switchOrder = document.getElementById("switch-order");
-    if (switchOrder) {
-        switchOrder.value = (switchOrder.value === "▲") ? "▼" : "▲";
-        switchOrder.textContent = switchOrder.value;
-    }
+
+    switchOrder.textContent = (switchOrder.textContent === "▲") ? "▼" : "▲";
+    localStorage.setItem("order", switchOrder.textContent);
 }
