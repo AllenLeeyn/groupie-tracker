@@ -9,38 +9,36 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/style-filter-form.css">
     <link rel="stylesheet" id="style" href="/static/css/style-card-view.css">
+    <script src="/static/script.js" defer></script>
 </head>
 <body>
     <header class="top-bar">
         <a href="/">groupie-tracker</a>
     </header>
 
-    <form action="/" method="post">
+    <div>
         <input id="toggle" type="checkbox" style="display: none;">
-        
         <div class="options-container">
+            <div class="sort-options" >
+                <label for="sort">Sort by:</label>
+                <select name="sort" id="sort">
+                    <option value="default" selected>default</option>
+                    <option value="name">Name</option>
+                    <option value="creation_date">Creation Date</option>
+                    <option value="membersCount">No of Members</option>
+                    <option value="firstAlbum">First Albun</option>
+                </select>
+                <button name="switch-order" id="switch-order" class="sort-order" onclick="revCards()">▼</button>
+                <input id="cssFile" type="text" name="cssFile" style="display: none;">
+                <button id="changeStyleButton">Change view</button>
+            </div>
             <div>
                 <label class="sort-order show" for="toggle">Show Filters</label>
                 <label class="sort-order hide" for="toggle">Hide Filters</label>
             </div>
-            <div class="sort-options" >
-                <label for="sort">Sort by:</label>
-                <select name="sort" id="sort" onchange="this.form.submit()">
-                    <option value="default" {{if eq .SortBy "default"}}selected{{end}}>default</option>
-                    <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
-                    <option value="creation_date" {{if eq .SortBy "creation_date"}}selected{{end}}>Creation Date</option>
-                    <option value="membersCount" {{if eq .SortBy "membersCount"}}selected{{end}}>No of Members</option>
-                    <option value="firstAlbum" {{if eq .SortBy "firstAlbum"}}selected{{end}}>First Albun</option>
-                </select>
-                <button name="switch-order" id="switch-order" class="sort-order" type="submit" value={{.Order}}>
-                    {{.Order}}
-                </button>
-                <input id="cssFile" type="text" name="cssFile" style="display: none;">
-                <button id="changeStyleButton">Change view</button>
-            </div>
         </div>
 
-        <div class="fixed-form hide">
+        <form action="/" method="post" class="fixed-form hide">
             <legend>Members number:</legend>
             <input type="checkbox" id="1" name="members number" value="1" {{ range .Filters.NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
             <label for="1">1</label>
@@ -62,8 +60,8 @@
             <legend>Date of first album:</legend>
             <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />
 
-            <legend>location(s) of concerts</legend>
-            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea><br><br>
+            <legend>location(s) of concerts:</legend>
+            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea>
             {{if .Artists}}
             <div class="slidecontainer">
                 <input type="text" name="years range" id="years range" {{ if .Filters.YearsRange }} value="{{.Filters.YearsRange}}" {{ end }}>
@@ -79,8 +77,8 @@
             </div>
             {{end}}
             <button type="submit" class="sort-order">Apply</button>
-        </div>
-    </form>
+        </form>
+    </div>
 
 
     <div class="container">
@@ -93,6 +91,8 @@
                 <p>Started {{.CreationDate}}</p>
                 {{if gt .MembersCount 1}}
                 <p>{{.MembersCount}} members</p>
+                {{else}}
+                <p style="display: none;">{{.MembersCount}} members</p>
                 {{end}}
                 <p>First Album: {{.FirstAlbum}}</p>
             </div>
@@ -108,102 +108,4 @@
         <p>Anass Touba (atouba) & Allen Lee (ylee)</p>
     </footer>
 </body>
-
-<script>
-const button = document.getElementById('changeStyleButton');
-const stylesheet = document.getElementById('style');
-
-(localStorage.getItem("cssFile") !== null)? stylesheet.href = localStorage.getItem("cssFile"): null;
-
-button.addEventListener('click', () => {
-    if (stylesheet.href.substring(stylesheet.href.length-"style-card-view.css".length) === 'style-card-view.css') {
-        localStorage.setItem("cssFile", '/static/css/style-list-view.css')
-    }
-    else {
-        localStorage.setItem("cssFile", '/static/css/style-card-view.css')
-    }
-    
-    stylesheet.href = localStorage.getItem("cssFile")
-});
-
-/*------------------------------------------------------------------------------------------------*/
-
-var yearsRangeInput = document.getElementById("years range")
-var startDateOutput = document.getElementById("start-date")
-var endDateOutput = document.getElementById("end-date")
-
-var slider = document.getElementById("myRange")
-var output = document.getElementById("range-current-value");
-
-startDateOutput.innerHTML = slider.value; // Display the default slider value
-
-yearsRangeInput.oninput = function() {
-    // endDateOutput.innerHTML = " " + this.value
-    date = parseInt(startDateOutput.innerHTML) + parseInt(this.value)
-    if (typeof date === 'number' && !isNaN(date)) {
-        latterDate = (date).toString()
-        endDateOutput.innerHTML = " " + latterDate
-    } else {
-        endDateOutput.innerHTML = ""
-    }
-
-    if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
-        [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
-    }
-    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML)
-    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML)
-
-    if (endDateOutput.innerHTML[0] !== ' ')
-        endDateOutput.innerHTML = " " + endDateOutput.innerHTML
-    if (startDateOutput.innerHTML[0] === ' ')
-        startDateOutput.innerHTML = startDateOutput.innerHTML.substring(1)
-}
-
-// output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-    // output.innerHTML = this.value;
-    startDateOutput.innerHTML = this.value;
-    if (typeof yearsRangeInput.innerHTML === 'number' && !isNaN(yearsRangeInput.innerHTML)) {
-        endDateOutput.innerHTML = (parseInt(startDateOutput.innerHTML) + parseInt(yearsRangeInput.innerHTML)).toString()
-    }
-
-    if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
-        [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
-    }
-    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML)
-    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML)
-
-    if (endDateOutput.innerHTML[0] !== ' ')
-        endDateOutput.innerHTML = " " + endDateOutput.innerHTML
-    if (startDateOutput.innerHTML[0] === ' ')
-        startDateOutput.innerHTML = startDateOutput.innerHTML.substring(1)
-}
-
-function sanitize(x) {
-    if (parseInt(x) > 2015) {
-        return "2015"
-    }
-    if (parseInt(x) < 1958) {
-        return "1958"
-    }
-    return x
-}
-
-/*------------------------------------------------------------------------------------------------*/
-
-const filterVisibility = document.getElementById('toggle');
-(localStorage.getItem("filterToggle") === "true")? filterVisibility.checked = true: filterVisibility.checked = false;
-
-filterVisibility.addEventListener('change', () => {
-    if (filterVisibility.checked){
-        localStorage.setItem("filterToggle", "true");
-        filterVisibility.checked = true;
-    }  else {
-        localStorage.setItem("filterToggle", "false");
-        filterVisibility.checked = false;
-    }
-});
-</script>
 </html>

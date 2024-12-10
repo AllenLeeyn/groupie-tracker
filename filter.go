@@ -23,8 +23,7 @@ func mainFilter(req *http.Request) error {
 	filtrs.Locations = checkGetLocations(req.Form["locations"])
 	rangeValue := req.Form["range"]
 	applyRange := req.Form["applyRange"]
-	if (len(req.Form["submit button"]) == 1 && req.Method != "POST") ||
-		((len(req.Form["submit button"]) == 0 && len(req.Form["sort"]) == 0 && len(req.Form["switch-order"]) == 0) && req.Method != "GET") {
+	if len(req.Form["submit button"]) == 1 && req.Method != "POST" {
 		// return errorPage{405, "405 method not allowed"}
 		return MethodNotAllowedErr
 	}

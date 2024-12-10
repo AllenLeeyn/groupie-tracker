@@ -16,8 +16,6 @@ type filters struct {
 
 type listPage struct {
 	Artists []artist
-	SortBy  string
-	Order   string
 	Filters filters
 }
 
@@ -76,11 +74,6 @@ func homeHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if err := mainFilter(req); err != nil {
-		errPage := err.(errorPage) // type assertion
-		errorHandler(&w, errPage)
-		return
-	}
-	if err := getSortedArtists(req); err != nil {
 		errPage := err.(errorPage) // type assertion
 		errorHandler(&w, errPage)
 		return
