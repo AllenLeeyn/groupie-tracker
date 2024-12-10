@@ -38,7 +38,13 @@ func mainFilter(req *http.Request) error {
 		newArtistsLst = filterLocations(newArtistsLst, filtrs.Locations)
 	}
 	if len(applyRange) != 0 {
-		newArtistsLst = filter(newArtistsLst, rangeValue[0], compareCreationDate)
+		if len(req.Form["years range"]) != 0 {
+			filtrs.YearsRange = req.Form["years range"][0]
+		} else {
+			filtrs.YearsRange = ""
+		}
+		newArtistsLst = filterCreationDateRange(newArtistsLst, rangeValue[0], filtrs.YearsRange)
+		// newArtistsLst = filter(newArtistsLst, rangeValue[0], compareCreationDate)
 		filtrs.ApplyRange = applyRange[0]
 	}
 	filtrs.EarliestDt = strconv.Itoa(earliestCreationDate(newArtistsLst))
@@ -49,12 +55,45 @@ func mainFilter(req *http.Request) error {
 	return nil
 }
 
+func getYearsRange(rangeValue, yearsStr string) (startDate string, endDate string) {
+	yearsNb, _ := strconv.Atoi(yearsStr)
+	rangeValueNb, _ := strconv.Atoi(rangeValue)
+	if yearsNb < 0 {
+		start := rangeValueNb + yearsNb
+		if start < 1958 {
+			start = 1958
+		}
+		startDate = strconv.Itoa(start)
+		endDate = rangeValue
+	} else {
+		end := rangeValueNb + yearsNb
+		if end > 2015 {
+			end = 2015
+		}
+		startDate = rangeValue
+		endDate = strconv.Itoa(end)
+	}
+	return
+}
+
+func filterCreationDateRange(arr []artist, rangeValue, yearsRange string) []artist {
+	newArr := []artist{}
+	startDate, endDate := getYearsRange(rangeValue, yearsRange)
+	end, _ := strconv.Atoi(endDate)
+	for start, _ := strconv.Atoi(startDate); start <= end; start++ {
+		newArr = append(newArr, filter(arr, strconv.Itoa(start), compareCreationDate)...)
+	}
+	return newArr
+}
+
 func checkFADate(date []string) error {
 	if len(date) == 0 {
 		return errors.New("invalid date format")
 	}
-	isMatch, _ := regexp.Match("([0-9]{2}-[0-9]{2}-[0-9]{4})", []byte(date[0]))
-	if len(date[0]) != 10 || !isMatch {
+	// isMatch, _ := regexp.Match("([0-9]{2}-[0-9]{2}-[0-9]{4})", []byte(date[0]))
+	isMatch, _ := regexp.Match("([0-9]{4})", []byte(date[0]))
+	// if len(date[0]) != 10 || !isMatch {
+	if !isMatch {
 		return errors.New("invalid date format")
 	}
 	return nil

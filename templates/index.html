@@ -66,11 +66,16 @@
             <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea><br><br>
             {{if .Artists}}
             <div class="slidecontainer">
-                <input type="range" name="range" min="{{ .Filters.EarliestDt }}" max="{{.Filters.LatestDt}}" value="{{.Filters.EarliestDt}}" class="slider" id="myRange">
+                <input type="text" name="years range" id="years range" {{ if .Filters.YearsRange }} value="{{.Filters.YearsRange}}" {{ end }}>
+                <label for="years range">years range</label>
+                <input type="range" name="range" min="1958" max="2015" value="1958" class="slider" id="myRange">
                 <label for="myRange">apply range value
                     <input type="checkbox" name="applyRange" {{if eq .Filters.ApplyRange "on" }} checked {{end}}>
                 </label>
-                <div id="range-current-value"></div>
+                <!-- <div id="range-current-value"></div> -->
+                <div id="range-current-value">
+                    <span id="start-date"></span><span id="end-date"></span>
+                </div>
             </div>
             {{end}}
             <button type="submit" class="sort-order">Apply</button>
@@ -123,14 +128,68 @@ button.addEventListener('click', () => {
 
 /*------------------------------------------------------------------------------------------------*/
 
-var slider = document.getElementById("myRange")
-    var output = document.getElementById("range-current-value");
-    output.innerHTML = slider.value; // Display the default slider value
+var yearsRangeInput = document.getElementById("years range")
+var startDateOutput = document.getElementById("start-date")
+var endDateOutput = document.getElementById("end-date")
 
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function() {
-        output.innerHTML = this.value;
+var slider = document.getElementById("myRange")
+var output = document.getElementById("range-current-value");
+
+startDateOutput.innerHTML = slider.value; // Display the default slider value
+
+yearsRangeInput.oninput = function() {
+    // endDateOutput.innerHTML = " " + this.value
+    date = parseInt(startDateOutput.innerHTML) + parseInt(this.value)
+    if (typeof date === 'number' && !isNaN(date)) {
+        latterDate = (date).toString()
+        endDateOutput.innerHTML = " " + latterDate
+    } else {
+        endDateOutput.innerHTML = ""
     }
+
+    if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
+        [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
+    }
+    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML)
+    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML)
+
+    if (endDateOutput.innerHTML[0] !== ' ')
+        endDateOutput.innerHTML = " " + endDateOutput.innerHTML
+    if (startDateOutput.innerHTML[0] === ' ')
+        startDateOutput.innerHTML = startDateOutput.innerHTML.substring(1)
+}
+
+// output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+    // output.innerHTML = this.value;
+    startDateOutput.innerHTML = this.value;
+    if (typeof yearsRangeInput.innerHTML === 'number' && !isNaN(yearsRangeInput.innerHTML)) {
+        endDateOutput.innerHTML = (parseInt(startDateOutput.innerHTML) + parseInt(yearsRangeInput.innerHTML)).toString()
+    }
+
+    if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
+        [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
+    }
+    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML)
+    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML)
+
+    if (endDateOutput.innerHTML[0] !== ' ')
+        endDateOutput.innerHTML = " " + endDateOutput.innerHTML
+    if (startDateOutput.innerHTML[0] === ' ')
+        startDateOutput.innerHTML = startDateOutput.innerHTML.substring(1)
+}
+
+function sanitize(x) {
+    if (parseInt(x) > 2015) {
+        return "2015"
+    }
+    if (parseInt(x) < 1958) {
+        return "1958"
+    }
+    return x
+}
 
 /*------------------------------------------------------------------------------------------------*/
 

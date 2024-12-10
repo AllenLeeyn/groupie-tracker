@@ -11,6 +11,7 @@ type filters struct {
 	EarliestDt string
 	LatestDt   string
 	ApplyRange string
+	YearsRange string
 }
 
 type listPage struct {
