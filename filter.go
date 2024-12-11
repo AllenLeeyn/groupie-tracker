@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func getFiltrs(req *http.Request) (filters, []string, []string, []string, []string)  {
+func getFiltrs(req *http.Request) (filters, []string, []string)  {
 	filtrs := filters{}
 	filtrs.NbChecked = req.Form["members number"]
 	filtrs.DateFA = checkGetFADate(req.Form["first album date"]) // FA: first album
@@ -19,7 +19,21 @@ func getFiltrs(req *http.Request) (filters, []string, []string, []string, []stri
 	applyCreationDFltr := req.Form["applyRange"]
 	firstADate := req.Form["range0"]
 	applyFirstADFltr := req.Form["applyRange0"]
-	return filtrs, CreationD, applyCreationDFltr, firstADate, applyFirstADFltr
+
+	if len(applyFirstADFltr) != 0 {
+		if len(req.Form["yearsrange0"]) != 0 {
+			filtrs.YearsRange0 = req.Form["yearsrange0"][0]
+		}
+		filtrs.ApplyFirstADFltr = applyFirstADFltr[0]
+	}
+	if len(applyCreationDFltr) != 0 {
+		if len(req.Form["years range"]) != 0 {
+			filtrs.YearsRange = req.Form["years range"][0]
+		}
+		filtrs.ApplyCreationDFltr = applyCreationDFltr[0]
+	}
+
+	return filtrs, CreationD, firstADate
 }
 
 func mainFilter(req *http.Request) error {
@@ -29,7 +43,7 @@ func mainFilter(req *http.Request) error {
 		return BadRequestErr
 	}
 
-	filtrs, CreationD, applyCreationDFltr, firstADate, applyFirstADFltr := getFiltrs(req)
+	filtrs, CreationD, firstADate  := getFiltrs(req)
 
 	if len(req.Form["submit button"]) == 1 && req.Method != "POST" {
 		return MethodNotAllowedErr
@@ -40,23 +54,11 @@ func mainFilter(req *http.Request) error {
 	if len(filtrs.Locations) != 0 {
 		newArtistsLst = filterLocations(newArtistsLst, filtrs.Locations)
 	}
-	if len(applyFirstADFltr) != 0 {
-		if len(req.Form["yearsrange0"]) != 0 {
-			filtrs.YearsRange0 = req.Form["yearsrange0"][0]
-		} else {
-			filtrs.YearsRange0 = ""
-		}
+	if filtrs.ApplyFirstADFltr == "on" {
 		newArtistsLst = filterFirstADate(newArtistsLst, firstADate[0], filtrs.YearsRange0)
-		filtrs.ApplyFirstADFltr = applyFirstADFltr[0]
 	}
-	if len(applyCreationDFltr) != 0 {
-		if len(req.Form["years range"]) != 0 {
-			filtrs.YearsRange = req.Form["years range"][0]
-		} else {
-			filtrs.YearsRange = ""
-		}
+	if filtrs.ApplyCreationDFltr == "on" {
 		newArtistsLst = filterCreationDateRange(newArtistsLst, CreationD[0], filtrs.YearsRange)
-		filtrs.ApplyCreationDFltr = applyCreationDFltr[0]
 	}
 
 	homePage.Artists = newArtistsLst
