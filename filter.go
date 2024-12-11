@@ -10,13 +10,7 @@ import (
 	"strings"
 )
 
-func mainFilter(req *http.Request) error {
-	var newArtistsLst []artist = slices.Clone(artistsLst)
-
-	if err := req.ParseForm(); err != nil {
-		return BadRequestErr
-	}
-
+func getFiltrs(req *http.Request) (filters, []string, []string, []string, []string)  {
 	filtrs := filters{}
 	filtrs.NbChecked = req.Form["members number"]
 	filtrs.DateFA = checkGetFADate(req.Form["first album date"]) // FA: first album
@@ -25,10 +19,21 @@ func mainFilter(req *http.Request) error {
 	applyCreationDFltr := req.Form["applyRange"]
 	firstADate := req.Form["range0"]
 	applyFirstADFltr := req.Form["applyRange0"]
+	return filtrs, CreationD, applyCreationDFltr, firstADate, applyFirstADFltr
+}
+
+func mainFilter(req *http.Request) error {
+	var newArtistsLst []artist = slices.Clone(artistsLst)
+
+	if err := req.ParseForm(); err != nil {
+		return BadRequestErr
+	}
+
+	filtrs, CreationD, applyCreationDFltr, firstADate, applyFirstADFltr := getFiltrs(req)
+
 	if len(req.Form["submit button"]) == 1 && req.Method != "POST" {
 		return MethodNotAllowedErr
 	}
-
 	if len(filtrs.NbChecked) != 0 {
 		newArtistsLst = filterArtists(newArtistsLst, filtrs.NbChecked)
 	}
@@ -53,8 +58,6 @@ func mainFilter(req *http.Request) error {
 		newArtistsLst = filterCreationDateRange(newArtistsLst, CreationD[0], filtrs.YearsRange)
 		filtrs.ApplyCreationDFltr = applyCreationDFltr[0]
 	}
-	filtrs.EarliestDt = strconv.Itoa(earliestCreationDate(newArtistsLst))
-	filtrs.LatestDt = strconv.Itoa(latestCreationDate(newArtistsLst))
 
 	homePage.Artists = newArtistsLst
 	homePage.Filters = filtrs
@@ -209,30 +212,4 @@ func isArtistInArr(arr []artist, name string) bool {
 		}
 	}
 	return false
-}
-
-func earliestCreationDate(arr []artist) int {
-	if len(arr) == 0 {
-		return -1
-	}
-	earliestDate := arr[0].CreationDate
-	for _, artist := range arr {
-		if earliestDate > artist.CreationDate {
-			earliestDate = artist.CreationDate
-		}
-	}
-	return earliestDate
-}
-
-func latestCreationDate(arr []artist) int {
-	if len(arr) == 0 {
-		return -1
-	}
-	var latestDate int
-	for _, artist := range arr {
-		if latestDate < artist.CreationDate {
-			latestDate = artist.CreationDate
-		}
-	}
-	return latestDate
 }
