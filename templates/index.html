@@ -99,7 +99,7 @@
                                 
                             <!-- <div id="range-current-value"></div> -->
                             <div id="range-current-value">
-                                <label for="range">From:</label> <span id="start-date"></span><span id="end-date"></span>
+                                <label>From:</label> <span id="start-date"></span><span id="end-date"></span>
                             </div>
                             <input type="range" name="range" min="1958" max="2015" value="1958" class="slider" id="myRange">
                             
@@ -117,6 +117,7 @@
     </div>
 
 
+    <p id="resultCount" style="color: black; padding-left: 10px;">showing artist(s)</p>
     <div class="container">
 
         {{range .Artists}}

@@ -204,6 +204,9 @@ document.addEventListener("DOMContentLoaded", () =>{
     container.innerHTML = '';
     sortedCards.forEach(card => container.appendChild(card));
 
+    const resultCount = document.getElementById('resultCount');
+    resultCount.textContent = "Showing " + sortedCards.length + " artist(s)"
+
     // Attach the event listener to the dropdown
     sort.addEventListener("change", sortCards);
 })
