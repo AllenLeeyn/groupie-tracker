@@ -202,13 +202,16 @@ footer:active{
     color: #000;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .options-container{
         flex-direction: column;
     }
     .data-row{
         display: flex;
         flex: 1;
+        flex-direction: column;
+    }
+    .sliderWithTextbox{
         flex-direction: column;
     }
 }

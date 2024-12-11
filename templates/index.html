@@ -39,44 +39,80 @@
         </div>
 
         <form action="/" method="post" class="fixed-form hide">
-            <legend>Members number:</legend>
-            <input type="checkbox" id="1" name="members number" value="1" {{ range .Filters.NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
-            <label for="1">1</label>
-            <input type="checkbox" id="2" name="members number" value="2" {{ range .Filters.NbChecked }} {{if eq . "2" }} checked="checked" {{end}} {{ end }}>
-            <label for="2">2</label>
-            <input type="checkbox" id="3" name="members number" value="3" {{ range .Filters.NbChecked }} {{if eq . "3" }} checked="checked" {{end}} {{ end }}>
-            <label for="3">3</label>
-            <input type="checkbox" id="4" name="members number" value="4" {{ range .Filters.NbChecked }} {{if eq . "4" }} checked="checked" {{end}} {{ end }}>
-            <label for="4">4</label>
-            <input type="checkbox" id="5" name="members number" value="5" {{ range .Filters.NbChecked }} {{if eq . "5" }} checked="checked" {{end}} {{ end }}>
-            <label for="5">5</label>
-            <input type="checkbox" id="6" name="members number" value="6" {{ range .Filters.NbChecked }} {{if eq . "6" }} checked="checked" {{end}} {{ end }}>
-            <label for="6">6</label>
-            <input type="checkbox" id="7" name="members number" value="7" {{ range .Filters.NbChecked }} {{if eq . "7" }} checked="checked" {{end}} {{ end }}>
-            <label for="7">7</label>
-            <input type="checkbox" id="8" name="members number" value="8" {{ range .Filters.NbChecked }} {{if eq . "8" }} checked="checked" {{end}} {{ end }}>
-            <label for="8">8</label><br>
-
-            <legend>Date of first album:</legend>
-            <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} />
-
-            <legend>location(s) of concerts:</legend>
-            <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea>
-            {{if .Artists}}
-            <div class="slidecontainer">
-                <input type="text" name="years range" id="years range" {{ if .Filters.YearsRange }} value="{{.Filters.YearsRange}}" {{ end }}>
-                <label for="years range">years range</label>
-                <input type="range" name="range" min="1958" max="2015" value="1958" class="slider" id="myRange">
-                <label for="myRange">apply range value
-                    <input type="checkbox" name="applyRange" {{if eq .Filters.ApplyRange "on" }} checked {{end}}>
-                </label>
-                <!-- <div id="range-current-value"></div> -->
-                <div>
-                    <span id="start-date"></span><span id="end-date"></span>
+            <div class="form-container">
+                <legend>Members number:</legend>
+                <input type="checkbox" id="1" name="members number" value="1" {{ range .Filters.NbChecked }} {{if eq . "1" }} checked="checked" {{end}} {{ end }}>
+                <label for="1">1</label>
+                <input type="checkbox" id="2" name="members number" value="2" {{ range .Filters.NbChecked }} {{if eq . "2" }} checked="checked" {{end}} {{ end }}>
+                <label for="2">2</label>
+                <input type="checkbox" id="3" name="members number" value="3" {{ range .Filters.NbChecked }} {{if eq . "3" }} checked="checked" {{end}} {{ end }}>
+                <label for="3">3</label>
+                <input type="checkbox" id="4" name="members number" value="4" {{ range .Filters.NbChecked }} {{if eq . "4" }} checked="checked" {{end}} {{ end }}>
+                <label for="4">4</label>
+                <input type="checkbox" id="5" name="members number" value="5" {{ range .Filters.NbChecked }} {{if eq . "5" }} checked="checked" {{end}} {{ end }}>
+                <label for="5">5</label>
+                <input type="checkbox" id="6" name="members number" value="6" {{ range .Filters.NbChecked }} {{if eq . "6" }} checked="checked" {{end}} {{ end }}>
+                <label for="6">6</label>
+                <input type="checkbox" id="7" name="members number" value="7" {{ range .Filters.NbChecked }} {{if eq . "7" }} checked="checked" {{end}} {{ end }}>
+                <label for="7">7</label>
+                <input type="checkbox" id="8" name="members number" value="8" {{ range .Filters.NbChecked }} {{if eq . "8" }} checked="checked" {{end}} {{ end }}>
+                <label for="8">8</label><br>
+    
+                <!-- <legend>Date of first album:</legend>
+                <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} /> -->
+                <div class="slidecontainer">
+                    <legend>First Album Date:
+                        <label for="myRange0">
+                            <input type="checkbox" name="applyRange0" {{if eq .Filters.ApplyFirstADFltr "on" }} checked {{end}}>
+                            Check to apply range
+                        </label>
+                    </legend>
+                    <div class="sliderWithTextbox">
+                        <div id="ele1">
+                                
+                            <!-- <div id="range-current-value"></div> -->
+                            <div id="range-current-value">
+                                <label for="range0">From:</label> <span id="start-date0"></span><span id="end-date0"></span>
+                            </div>
+                            <input type="range" name="range0" min="1963" max="2018" value="1963" class="slider" id="myRange0">
+                            
+                        </div>
+                        <div id="ele2">
+                            <label for="yearsrange0">Range (in years)</label>
+                            <input type="text" name="yearsrange0" id="yearsrange0" {{ if .Filters.YearsRange0 }} value="{{.Filters.YearsRange0}}" {{ end }}>
+                        </div>
+                    </div>
                 </div>
+    
+                <legend>location(s) of concerts:</legend>
+                <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea>
+                {{if .Artists}}
+                <div class="slidecontainer">
+                    <legend>Creation Date:
+                        <label for="myRange">
+                            <input type="checkbox" name="applyRange" {{if eq .Filters.ApplyCreationDFltr "on" }} checked {{end}}>
+                            Check to apply range
+                        </label>
+                    </legend>
+                    <div class="sliderWithTextbox">
+                        <div id="ele1">
+                                
+                            <!-- <div id="range-current-value"></div> -->
+                            <div id="range-current-value">
+                                <label for="range">From:</label> <span id="start-date"></span><span id="end-date"></span>
+                            </div>
+                            <input type="range" name="range" min="1958" max="2015" value="1958" class="slider" id="myRange">
+                            
+                        </div>
+                        <div id="ele2">
+                            <label for="years range">Range (in years)</label>
+                            <input type="text" name="years range" id="years range" {{ if .Filters.YearsRange }} value="{{.Filters.YearsRange}}" {{ end }}>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+                <button type="submit" class="sort-order">Apply</button>
             </div>
-            {{end}}
-            <button type="submit" class="sort-order">Apply</button>
         </form>
     </div>
 

@@ -16,15 +16,53 @@ button.addEventListener('click', () => {
 
 /*------------------------------------------------------------------------------------------------*/
 
-// var slider = document.getElementById("myRange")
-//     var output = document.getElementById("range-current-value");
-//     output.innerHTML = slider.value; // Display the default slider value
+var yearsRangeInput0 = document.getElementById("yearsrange0")
+var startDateOutput0 = document.getElementById("start-date0")
+var endDateOutput0 = document.getElementById("end-date0")
 
-//     // Update the current slider value (each time you drag the slider handle)
-//     slider.oninput = function() {
-//         output.innerHTML = this.value;
-//     }
+var slider0 = document.getElementById("myRange0")
 
+startDateOutput0.innerHTML = slider0.value; // Display the default slider value
+
+yearsRangeInput0.oninput = function() {
+    date = parseInt(startDateOutput0.innerHTML) + parseInt(this.value)
+    if (!isNaN(date)) {
+        latterDate = date.toString()
+        endDateOutput0.innerHTML = latterDate
+    }
+
+    if (parseInt(endDateOutput0.innerHTML) < parseInt(startDateOutput0.innerHTML)) {
+        [startDateOutput0.innerHTML, endDateOutput0.innerHTML] = [endDateOutput0.innerHTML, startDateOutput0.innerHTML] 
+    }
+    startDateOutput0.innerHTML = sanitize(startDateOutput0.innerHTML, 1963, 2018)
+    endDateOutput0.innerHTML = sanitize(endDateOutput0.innerHTML, 1963, 2018)
+
+    if (endDateOutput0.innerHTML[0] !== ' ')
+        endDateOutput0.innerHTML = " " + endDateOutput0.innerHTML
+    if (startDateOutput0.innerHTML[0] === ' ')
+        startDateOutput0.innerHTML = startDateOutput0.innerHTML.substring(1)
+}
+
+slider0.oninput = function() {
+    startDateOutput0.innerHTML = this.value;
+    end = (parseInt(startDateOutput0.innerHTML) + parseInt(yearsRangeInput0.innerHTML)).toString()
+    if (!isNaN(end)) {
+        endDateOutput0.innerHTML = end
+    }
+
+    if (parseInt(endDateOutput0.innerHTML) < parseInt(startDateOutput0.innerHTML)) {
+        [startDateOutput0.innerHTML, endDateOutput0.innerHTML] = [endDateOutput0.innerHTML, startDateOutput0.innerHTML] 
+    }
+    startDateOutput0.innerHTML = sanitize(startDateOutput0.innerHTML, 1963, 2018)
+    endDateOutput0.innerHTML = sanitize(endDateOutput0.innerHTML, 1963, 2018)
+
+    if (endDateOutput0.innerHTML[0] !== ' ')
+        endDateOutput0.innerHTML = " " + endDateOutput0.innerHTML
+    if (startDateOutput0.innerHTML[0] === ' ')
+        startDateOutput0.innerHTML = startDateOutput0.innerHTML.substring(1)
+}
+
+/*---*/
 
 var yearsRangeInput = document.getElementById("years range")
 var startDateOutput = document.getElementById("start-date")
@@ -36,19 +74,16 @@ startDateOutput.innerHTML = slider.value; // Display the default slider value
 
 yearsRangeInput.oninput = function() {
     date = parseInt(startDateOutput.innerHTML) + parseInt(this.value)
-    if (typeof date === 'number' && !isNaN(date)) {
+    if (!isNaN(date)) {
         latterDate = date.toString()
         endDateOutput.innerHTML = latterDate
     }
-    // else {
-    //     endDateOutput.innerHTML = ""
-    // }
 
     if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
         [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
     }
-    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML)
-    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML)
+    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML, 1958, 2015)
+    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML, 1958, 2015)
 
     if (endDateOutput.innerHTML[0] !== ' ')
         endDateOutput.innerHTML = " " + endDateOutput.innerHTML
@@ -58,28 +93,30 @@ yearsRangeInput.oninput = function() {
 
 slider.oninput = function() {
     startDateOutput.innerHTML = this.value;
-    if (!isNaN(yearsRangeInput.innerHTML)) {
-        endDateOutput.innerHTML = (parseInt(startDateOutput.innerHTML) + parseInt(yearsRangeInput.innerHTML)).toString()
+    end = (parseInt(startDateOutput.innerHTML) + parseInt(yearsRangeInput.innerHTML)).toString()
+    if (!isNaN(end)) {
+        endDateOutput.innerHTML = end
     }
 
     if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
         [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
     }
-    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML)
-    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML)
+    startDateOutput.innerHTML = sanitize(startDateOutput.innerHTML, 1958, 2015)
+    endDateOutput.innerHTML = sanitize(endDateOutput.innerHTML, 1958, 2015)
 
     if (endDateOutput.innerHTML[0] !== ' ')
         endDateOutput.innerHTML = " " + endDateOutput.innerHTML
     if (startDateOutput.innerHTML[0] === ' ')
         startDateOutput.innerHTML = startDateOutput.innerHTML.substring(1)
 }
-
-function sanitize(x) {
-    if (parseInt(x) > 2015) {
-        return "2015"
+/*---*/
+function sanitize(x, minDate, maxDate) {
+    if (parseInt(x) > maxDate) {
+        return maxDate.toString()
     }
-    if (parseInt(x) < 1958) {
-        return "1958"
+
+    if (parseInt(x) < minDate) {
+        return minDate.toString()
     }
     return x
 }

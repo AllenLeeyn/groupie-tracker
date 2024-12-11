@@ -10,7 +10,10 @@ type filters struct {
 	Locations  []string
 	EarliestDt string
 	LatestDt   string
-	ApplyRange string
+	// ApplyRange string
+	ApplyCreationDFltr string
+	ApplyFirstADFltr string
+	YearsRange0 string
 	YearsRange string
 }
 

@@ -21,30 +21,39 @@ func mainFilter(req *http.Request) error {
 	filtrs.NbChecked = req.Form["members number"]
 	filtrs.DateFA = checkGetFADate(req.Form["first album date"]) // FA: first album
 	filtrs.Locations = checkGetLocations(req.Form["locations"])
-	rangeValue := req.Form["range"]
-	applyRange := req.Form["applyRange"]
+	CreationD := req.Form["range"]
+	applyCreationDFltr := req.Form["applyRange"]
+	firstADate := req.Form["range0"]
+	applyFirstADFltr := req.Form["applyRange0"]
 	if len(req.Form["submit button"]) == 1 && req.Method != "POST" {
-		// return errorPage{405, "405 method not allowed"}
 		return MethodNotAllowedErr
 	}
+
 	if len(filtrs.NbChecked) != 0 {
 		newArtistsLst = filterArtists(newArtistsLst, filtrs.NbChecked)
-	}
-	if filtrs.DateFA != "" {
-		newArtistsLst = filter(newArtistsLst, filtrs.DateFA, compareFADate)
 	}
 	if len(filtrs.Locations) != 0 {
 		newArtistsLst = filterLocations(newArtistsLst, filtrs.Locations)
 	}
-	if len(applyRange) != 0 {
+	if len(applyFirstADFltr) != 0 {
+		if len(req.Form["yearsrange0"]) != 0 {
+			filtrs.YearsRange0 = req.Form["yearsrange0"][0]
+		} else {
+			filtrs.YearsRange0 = ""
+		}
+		newArtistsLst = filterFirstADate(newArtistsLst, firstADate[0], filtrs.YearsRange0)
+		// newArtistsLst = filter(newArtistsLst, CreationD[0], compareCreationDate)
+		filtrs.ApplyFirstADFltr = applyFirstADFltr[0]
+	}
+	if len(applyCreationDFltr) != 0 {
 		if len(req.Form["years range"]) != 0 {
 			filtrs.YearsRange = req.Form["years range"][0]
 		} else {
 			filtrs.YearsRange = ""
 		}
-		newArtistsLst = filterCreationDateRange(newArtistsLst, rangeValue[0], filtrs.YearsRange)
-		// newArtistsLst = filter(newArtistsLst, rangeValue[0], compareCreationDate)
-		filtrs.ApplyRange = applyRange[0]
+		newArtistsLst = filterCreationDateRange(newArtistsLst, CreationD[0], filtrs.YearsRange)
+		// newArtistsLst = filter(newArtistsLst, CreationD[0], compareCreationDate)
+		filtrs.ApplyCreationDFltr = applyCreationDFltr[0]
 	}
 	filtrs.EarliestDt = strconv.Itoa(earliestCreationDate(newArtistsLst))
 	filtrs.LatestDt = strconv.Itoa(latestCreationDate(newArtistsLst))
@@ -54,20 +63,20 @@ func mainFilter(req *http.Request) error {
 	return nil
 }
 
-func getYearsRange(rangeValue, yearsStr string) (startDate string, endDate string) {
+func getYearsRange(rangeValue, yearsStr string, minYears, maxYears int) (startDate string, endDate string) {
 	yearsNb, _ := strconv.Atoi(yearsStr)
 	rangeValueNb, _ := strconv.Atoi(rangeValue)
 	if yearsNb < 0 {
 		start := rangeValueNb + yearsNb
-		if start < 1958 {
-			start = 1958
+		if start < minYears {
+			start = minYears
 		}
 		startDate = strconv.Itoa(start)
 		endDate = rangeValue
 	} else {
 		end := rangeValueNb + yearsNb
-		if end > 2015 {
-			end = 2015
+		if end > maxYears {
+			end = maxYears
 		}
 		startDate = rangeValue
 		endDate = strconv.Itoa(end)
@@ -75,9 +84,19 @@ func getYearsRange(rangeValue, yearsStr string) (startDate string, endDate strin
 	return
 }
 
+func filterFirstADate(arr []artist, rangeValue, yearsRange string) []artist {
+	newArr := []artist{}
+	startDate, endDate := getYearsRange(rangeValue, yearsRange, 1963, 2018)
+	end, _ := strconv.Atoi(endDate)
+	for start, _ := strconv.Atoi(startDate); start <= end; start++ {
+		newArr = append(newArr, filter(arr, strconv.Itoa(start), compareFADate)...)
+	}
+	return newArr
+}
+
 func filterCreationDateRange(arr []artist, rangeValue, yearsRange string) []artist {
 	newArr := []artist{}
-	startDate, endDate := getYearsRange(rangeValue, yearsRange)
+	startDate, endDate := getYearsRange(rangeValue, yearsRange, 1958, 2015)
 	end, _ := strconv.Atoi(endDate)
 	for start, _ := strconv.Atoi(startDate); start <= end; start++ {
 		newArr = append(newArr, filter(arr, strconv.Itoa(start), compareCreationDate)...)
@@ -132,6 +151,9 @@ func compareLoc(artist artist, loc string) bool {
 }
 
 func compareFADate(artist artist, date string) bool {
+	if len(date) < len(artist.FirstAlbum) {
+		return artist.FirstAlbum[len(artist.FirstAlbum)-len(date):] == date
+	}
 	return artist.FirstAlbum == date
 }
 
