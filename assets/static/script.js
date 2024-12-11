@@ -31,19 +31,18 @@ var startDateOutput = document.getElementById("start-date")
 var endDateOutput = document.getElementById("end-date")
 
 var slider = document.getElementById("myRange")
-var output = document.getElementById("range-current-value");
 
 startDateOutput.innerHTML = slider.value; // Display the default slider value
 
 yearsRangeInput.oninput = function() {
-    // endDateOutput.innerHTML = " " + this.value
     date = parseInt(startDateOutput.innerHTML) + parseInt(this.value)
     if (typeof date === 'number' && !isNaN(date)) {
-        latterDate = (date).toString()
-        endDateOutput.innerHTML = " " + latterDate
-    } else {
-        endDateOutput.innerHTML = ""
+        latterDate = date.toString()
+        endDateOutput.innerHTML = latterDate
     }
+    // else {
+    //     endDateOutput.innerHTML = ""
+    // }
 
     if (parseInt(endDateOutput.innerHTML) < parseInt(startDateOutput.innerHTML)) {
         [startDateOutput.innerHTML, endDateOutput.innerHTML] = [endDateOutput.innerHTML, startDateOutput.innerHTML] 
@@ -57,13 +56,9 @@ yearsRangeInput.oninput = function() {
         startDateOutput.innerHTML = startDateOutput.innerHTML.substring(1)
 }
 
-// output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-    // output.innerHTML = this.value;
     startDateOutput.innerHTML = this.value;
-    if (typeof yearsRangeInput.innerHTML === 'number' && !isNaN(yearsRangeInput.innerHTML)) {
+    if (!isNaN(yearsRangeInput.innerHTML)) {
         endDateOutput.innerHTML = (parseInt(startDateOutput.innerHTML) + parseInt(yearsRangeInput.innerHTML)).toString()
     }
 
