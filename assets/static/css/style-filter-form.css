@@ -6,6 +6,11 @@
   color: #000;
 }
 
+.form-container{
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .fixed-form legend {
   font-size: 1.2rem;
   font-weight: bold;
@@ -65,6 +70,18 @@
   margin: 1rem 0;
 }
 
+.sliderWithTextbox {
+  display: flex;
+  flex-direction: row;
+  gap: 20px
+}
+
+.sliderWithTextbox #ele1{
+  flex: 1;
+}
+.sliderWithTextbox #ele2{
+  flex: 0.5;
+}
 .fixed-form input[type="range"] {
   width: 100%;
   margin-bottom: 0.5rem;
