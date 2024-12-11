@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () =>{
     }
 
     sortCards();
-    let sortedCards = Array.from(container.getElementsByClassName("card"));
+    let sortedCards = container ? Array.from(container.getElementsByClassName("card")) : []; 
 
     const switchOrder = document.getElementById("switch-order");
     (localStorage.getItem("order") !== null)? switchOrder.textContent=localStorage.getItem("order"): null;
@@ -206,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () =>{
 
     const resultCount = document.getElementById('resultCount');
     resultCount.textContent = "Showing " + sortedCards.length + " artist(s)"
-
     // Attach the event listener to the dropdown
     sort.addEventListener("change", sortCards);
 })
