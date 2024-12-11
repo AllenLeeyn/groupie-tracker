@@ -42,7 +42,6 @@ func mainFilter(req *http.Request) error {
 			filtrs.YearsRange0 = ""
 		}
 		newArtistsLst = filterFirstADate(newArtistsLst, firstADate[0], filtrs.YearsRange0)
-		// newArtistsLst = filter(newArtistsLst, CreationD[0], compareCreationDate)
 		filtrs.ApplyFirstADFltr = applyFirstADFltr[0]
 	}
 	if len(applyCreationDFltr) != 0 {
@@ -52,7 +51,6 @@ func mainFilter(req *http.Request) error {
 			filtrs.YearsRange = ""
 		}
 		newArtistsLst = filterCreationDateRange(newArtistsLst, CreationD[0], filtrs.YearsRange)
-		// newArtistsLst = filter(newArtistsLst, CreationD[0], compareCreationDate)
 		filtrs.ApplyCreationDFltr = applyCreationDFltr[0]
 	}
 	filtrs.EarliestDt = strconv.Itoa(earliestCreationDate(newArtistsLst))
@@ -108,9 +106,7 @@ func checkFADate(date []string) error {
 	if len(date) == 0 {
 		return errors.New("invalid date format")
 	}
-	// isMatch, _ := regexp.Match("([0-9]{2}-[0-9]{2}-[0-9]{4})", []byte(date[0]))
 	isMatch, _ := regexp.Match("([0-9]{4})", []byte(date[0]))
-	// if len(date[0]) != 10 || !isMatch {
 	if !isMatch {
 		return errors.New("invalid date format")
 	}

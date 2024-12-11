@@ -58,8 +58,6 @@
                 <input type="checkbox" id="8" name="members number" value="8" {{ range .Filters.NbChecked }} {{if eq . "8" }} checked="checked" {{end}} {{ end }}>
                 <label for="8">8</label><br>
     
-                <!-- <legend>Date of first album:</legend>
-                <input type="text" name="first album date" {{ if .Filters.DateFA }} value="{{ .Filters.DateFA }}" {{ else }} placeholder="DD-MM-YYYY" {{ end }} /> -->
                 <div class="slidecontainer">
                     <legend>First Album Date:
                         <label for="myRange0">
@@ -69,8 +67,6 @@
                     </legend>
                     <div class="sliderWithTextbox">
                         <div id="ele1">
-                                
-                            <!-- <div id="range-current-value"></div> -->
                             <div id="range-current-value">
                                 <label for="range0">From:</label> <span id="start-date0"></span><span id="end-date0"></span>
                             </div>
@@ -96,8 +92,6 @@
                     </legend>
                     <div class="sliderWithTextbox">
                         <div id="ele1">
-                                
-                            <!-- <div id="range-current-value"></div> -->
                             <div id="range-current-value">
                                 <label>From:</label> <span id="start-date"></span><span id="end-date"></span>
                             </div>
