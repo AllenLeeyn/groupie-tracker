@@ -57,32 +57,7 @@
                 <label for="7">7</label>
                 <input type="checkbox" id="8" name="members number" value="8" {{ range .Filters.NbChecked }} {{if eq . "8" }} checked="checked" {{end}} {{ end }}>
                 <label for="8">8</label><br>
-    
-                <div class="slidecontainer">
-                    <legend>First Album Date:
-                        <label for="myRange0">
-                            <input type="checkbox" name="applyRange0" {{if eq .Filters.ApplyFirstADFltr "on" }} checked {{end}}>
-                            Check to apply range
-                        </label>
-                    </legend>
-                    <div class="sliderWithTextbox">
-                        <div id="ele1">
-                            <div id="range-current-value">
-                                <label for="range0">From:</label> <span id="start-date0"></span><span id="end-date0"></span>
-                            </div>
-                            <input type="range" name="range0" min="1963" max="2018" value="1963" class="slider" id="myRange0">
-                            
-                        </div>
-                        <div id="ele2">
-                            <label for="yearsrange0">Range (in years)</label>
-                            <input type="text" name="yearsrange0" id="yearsrange0" {{ if .Filters.YearsRange0 }} value="{{.Filters.YearsRange0}}" {{ end }}>
-                        </div>
-                    </div>
-                </div>
-    
-                <legend>location(s) of concerts:</legend>
-                <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea>
-                {{if .Artists}}
+
                 <div class="slidecontainer">
                     <legend>Creation Date:
                         <label for="myRange">
@@ -95,16 +70,41 @@
                             <div id="range-current-value">
                                 <label>From:</label> <span id="start-date"></span><span id="end-date"></span>
                             </div>
-                            <input type="range" name="range" min="1958" max="2015" value="1958" class="slider" id="myRange">
+                            <input type="range" name="range" min="1958" max="2015" value="{{.Filters.CreateDate}}" class="slider" id="myRange">
                             
                         </div>
                         <div id="ele2">
                             <label for="years range">Range (in years)</label>
-                            <input type="text" name="years range" id="years range" {{ if .Filters.YearsRange }} value="{{.Filters.YearsRange}}" {{ end }}>
+                            <input type="text" name="years range" id="years range" {{ if .Filters.CreateRange }} value="{{.Filters.CreateRange}}" {{ end }}>
                         </div>
                     </div>
                 </div>
-                {{end}}
+    
+                <legend>location(s) of concerts:</legend>
+                <textarea id="locations" name="locations" rows="3" class="txt-input">{{range .Filters.Locations}}{{.}}{{ end }}</textarea>
+
+                <div class="slidecontainer">
+                    <legend>First Album Date:
+                        <label for="myRange0">
+                            <input type="checkbox" name="applyRange0" {{if eq .Filters.ApplyFirstADFltr "on" }} checked {{end}}>
+                            Check to apply range
+                        </label>
+                    </legend>
+                    <div class="sliderWithTextbox">
+                        <div id="ele1">
+                            <div id="range-current-value">
+                                <label for="range0">From:</label> <span id="start-date0"></span><span id="end-date0"></span>
+                            </div>
+                            <input type="range" name="range0" min="1963" max="2018" value="{{.Filters.FirstDate}}" class="slider" id="myRange0">
+                            
+                        </div>
+                        <div id="ele2">
+                            <label for="yearsrange0">Range (in years)</label>
+                            <input type="text" name="yearsrange0" id="yearsrange0" {{ if .Filters.FirstRange }} value="{{.Filters.FirstRange}}" {{ end }}>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" class="sort-order">Apply</button>
             </div>
         </form>

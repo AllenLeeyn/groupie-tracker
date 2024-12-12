@@ -5,15 +5,17 @@ import (
 )
 
 type filters struct {
-	NbChecked  []string
-	DateFA     string
-	Locations  []string
-	EarliestDt string
-	LatestDt   string
+	NbChecked []string
+
 	ApplyCreationDFltr string
+	CreateDate         int
+	CreateRange        int
+
+	Locations []string
+
 	ApplyFirstADFltr string
-	YearsRange0 string
-	YearsRange string
+	FirstDate        int
+	FirstRange       int
 }
 
 type listPage struct {

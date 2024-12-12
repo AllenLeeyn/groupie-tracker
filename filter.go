@@ -1,25 +1,43 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
-	"regexp"
 	"slices"
 	"strconv"
 	"strings"
 )
 
-func getFiltrs(req *http.Request) (filters, []string, []string, []string, []string)  {
+func getFiltrs(req *http.Request) filters {
 	filtrs := filters{}
 	filtrs.NbChecked = req.Form["members number"]
-	filtrs.DateFA = checkGetFADate(req.Form["first album date"]) // FA: first album
-	filtrs.Locations = checkGetLocations(req.Form["locations"])
-	CreationD := req.Form["range"]
-	applyCreationDFltr := req.Form["applyRange"]
-	firstADate := req.Form["range0"]
-	applyFirstADFltr := req.Form["applyRange0"]
-	return filtrs, CreationD, applyCreationDFltr, firstADate, applyFirstADFltr
+
+	filtrs.ApplyCreationDFltr = req.Form.Get("applyRange")
+	filtrs.CreateDate = checkDate(req.Form.Get("range"))
+	filtrs.CreateRange, _ = strconv.Atoi(req.Form.Get("years range"))
+
+	filtrs.Locations = checkLocations(req.Form.Get("locations"))
+
+	filtrs.ApplyFirstADFltr = req.Form.Get("applyRange0")
+	filtrs.FirstDate = checkDate(req.Form.Get("range0"))
+	filtrs.FirstRange, _ = strconv.Atoi(req.Form.Get("yearsrange0"))
+
+	return filtrs
+}
+
+func checkDate(date string) int {
+	if len(date) == 4 {
+		result, _ := strconv.Atoi(date)
+		return result
+	}
+	return 0
+}
+
+func checkLocations(locationsArr string) []string {
+	if locationsArr == "" {
+		return []string{}
+	}
+	return strings.Split(locationsArr, "\n")
 }
 
 func mainFilter(req *http.Request) error {
@@ -28,35 +46,24 @@ func mainFilter(req *http.Request) error {
 	if err := req.ParseForm(); err != nil {
 		return BadRequestErr
 	}
-
-	filtrs, CreationD, applyCreationDFltr, firstADate, applyFirstADFltr := getFiltrs(req)
+	filtrs := getFiltrs(req)
 
 	if len(req.Form["submit button"]) == 1 && req.Method != "POST" {
 		return MethodNotAllowedErr
 	}
 	if len(filtrs.NbChecked) != 0 {
-		newArtistsLst = filterArtists(newArtistsLst, filtrs.NbChecked)
+		newArtistsLst = filterMembersNbs(newArtistsLst, filtrs.NbChecked)
 	}
 	if len(filtrs.Locations) != 0 {
 		newArtistsLst = filterLocations(newArtistsLst, filtrs.Locations)
 	}
-	if len(applyFirstADFltr) != 0 {
-		if len(req.Form["yearsrange0"]) != 0 {
-			filtrs.YearsRange0 = req.Form["yearsrange0"][0]
-		} else {
-			filtrs.YearsRange0 = ""
-		}
-		newArtistsLst = filterFirstADate(newArtistsLst, firstADate[0], filtrs.YearsRange0)
-		filtrs.ApplyFirstADFltr = applyFirstADFltr[0]
+	if filtrs.ApplyFirstADFltr == "on" {
+		newArtistsLst = filterDates(newArtistsLst, filtrs.FirstDate,
+			filtrs.FirstRange, 1963, 2018, compareFADate)
 	}
-	if len(applyCreationDFltr) != 0 {
-		if len(req.Form["years range"]) != 0 {
-			filtrs.YearsRange = req.Form["years range"][0]
-		} else {
-			filtrs.YearsRange = ""
-		}
-		newArtistsLst = filterCreationDateRange(newArtistsLst, CreationD[0], filtrs.YearsRange)
-		filtrs.ApplyCreationDFltr = applyCreationDFltr[0]
+	if filtrs.ApplyCreationDFltr == "on" {
+		newArtistsLst = filterDates(newArtistsLst, filtrs.CreateDate,
+			filtrs.CreateRange, 1958, 2015, compareCreationDate)
 	}
 
 	homePage.Artists = newArtistsLst
@@ -64,78 +71,66 @@ func mainFilter(req *http.Request) error {
 	return nil
 }
 
-func getYearsRange(rangeValue, yearsStr string, minYears, maxYears int) (startDate string, endDate string) {
-	yearsNb, _ := strconv.Atoi(yearsStr)
-	rangeValueNb, _ := strconv.Atoi(rangeValue)
-	if yearsNb < 0 {
-		start := rangeValueNb + yearsNb
-		if start < minYears {
-			start = minYears
-		}
-		startDate = strconv.Itoa(start)
-		endDate = rangeValue
-	} else {
-		end := rangeValueNb + yearsNb
-		if end > maxYears {
-			end = maxYears
-		}
-		startDate = rangeValue
-		endDate = strconv.Itoa(end)
+func filterMembersNbs(arr []artist, membersNbs []string) []artist {
+	newArr := []artist{}
+	for _, membersNb := range membersNbs {
+		tempFiltered := filter(arr, membersNb, compareMembersNb)
+		newArr = append(newArr, tempFiltered...)
+	}
+	return newArr
+}
+
+func filterLocations(arr []artist, locations []string) []artist {
+	newArr := []artist{}
+	for _, loc := range locations {
+		tempFiltered := filter(arr, loc, compareLoc)
+		tempFiltered = differenceElements(tempFiltered, newArr)
+		newArr = append(newArr, tempFiltered...)
+	}
+	return newArr
+}
+
+func filterDates(arr []artist, date, rng, min, max int,
+	check func(artist, string) bool) []artist {
+	newArr := []artist{}
+	startDate, endDate := getYearsRange(date, rng, min, max)
+	for start := startDate; start <= endDate; start++ {
+		newArr = append(newArr, filter(arr, strconv.Itoa(start), check)...)
+	}
+	return newArr
+}
+
+func getYearsRange(date, rng, min, max int) (startDate, endDate int) {
+	if date < min || date > max {
+		date = min
+	}
+	startDate, endDate = date, date+rng
+	if rng < 0 {
+		startDate, endDate = endDate, startDate
+	}
+	if startDate < min {
+		startDate = min
+	}
+	if endDate > max {
+		endDate = max
 	}
 	return
 }
 
-func filterFirstADate(arr []artist, rangeValue, yearsRange string) []artist {
+func filter(arr []artist, criteria string, check func(artist, string) bool) []artist {
 	newArr := []artist{}
-	startDate, endDate := getYearsRange(rangeValue, yearsRange, 1963, 2018)
-	end, _ := strconv.Atoi(endDate)
-	for start, _ := strconv.Atoi(startDate); start <= end; start++ {
-		newArr = append(newArr, filter(arr, strconv.Itoa(start), compareFADate)...)
+	for _, artist := range arr {
+		if isArtistInArr(newArr, artist.Name) {
+			fmt.Println("?0")
+		}
+		if check(artist, criteria) && !isArtistInArr(newArr, artist.Name) {
+			newArr = append(newArr, artist)
+		}
 	}
 	return newArr
 }
 
-func filterCreationDateRange(arr []artist, rangeValue, yearsRange string) []artist {
-	newArr := []artist{}
-	startDate, endDate := getYearsRange(rangeValue, yearsRange, 1958, 2015)
-	end, _ := strconv.Atoi(endDate)
-	for start, _ := strconv.Atoi(startDate); start <= end; start++ {
-		newArr = append(newArr, filter(arr, strconv.Itoa(start), compareCreationDate)...)
-	}
-	return newArr
-}
-
-func checkFADate(date []string) error {
-	if len(date) == 0 {
-		return errors.New("invalid date format")
-	}
-	isMatch, _ := regexp.Match("([0-9]{4})", []byte(date[0]))
-	if !isMatch {
-		return errors.New("invalid date format")
-	}
-	return nil
-}
-
-func checkGetFADate(dateArr []string) string {
-	var date string
-
-	err := checkFADate(dateArr)
-	if err == nil {
-		date = dateArr[0]
-	} else {
-		date = ""
-	}
-	return date
-}
-
-func checkGetLocations(locationsArr []string) []string {
-	if len(locationsArr) == 0 || (len(locationsArr) == 1 && locationsArr[0] == "") {
-		return []string{}
-	}
-	return strings.Split(locationsArr[0], "\n")
-}
-
-func checkMembersNb(artist artist, membersNb string) bool {
+func compareMembersNb(artist artist, membersNb string) bool {
 	nb, _ := strconv.Atoi(membersNb)
 	return len(artist.Members) == nb
 }
@@ -156,13 +151,9 @@ func compareFADate(artist artist, date string) bool {
 	return artist.FirstAlbum == date
 }
 
-func filterArtists(arr []artist, membersNbs []string) []artist {
-	newArr := []artist{}
-	for _, membersNb := range membersNbs {
-		tempFiltered := filter(arr, membersNb, checkMembersNb)
-		newArr = append(newArr, tempFiltered...)
-	}
-	return newArr
+func compareCreationDate(artist artist, creationDate string) bool {
+	intDate, _ := strconv.Atoi(creationDate)
+	return artist.CreationDate == intDate
 }
 
 // differenceElements returns array of artists that are in a which are not in b
@@ -175,34 +166,6 @@ func differenceElements(a []artist, b []artist) []artist {
 		}
 	}
 	return difference
-}
-
-func filterLocations(arr []artist, locations []string) []artist {
-	newArr := []artist{}
-	for _, loc := range locations {
-		tempFiltered := filter(arr, loc, compareLoc)
-		tempFiltered = differenceElements(tempFiltered, newArr)
-		newArr = append(newArr, tempFiltered...)
-	}
-	return newArr
-}
-
-func compareCreationDate(artist artist, creationDate string) bool {
-	intDate, _ := strconv.Atoi(creationDate)
-	return artist.CreationDate == intDate
-}
-
-func filter(arr []artist, criteria string, check func(artist, string) bool) []artist {
-	newArr := []artist{}
-	for _, artist := range arr {
-		if isArtistInArr(newArr, artist.Name) {
-			fmt.Println("?0")
-		}
-		if check(artist, criteria) && !isArtistInArr(newArr, artist.Name) {
-			newArr = append(newArr, artist)
-		}
-	}
-	return newArr
 }
 
 func isArtistInArr(arr []artist, name string) bool {
